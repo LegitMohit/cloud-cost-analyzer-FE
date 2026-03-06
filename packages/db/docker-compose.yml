@@ -5,15 +5,15 @@ services:
     image: postgres
     container_name: cloud_cost_analyzer-postgres
     environment:
-      POSTGRES_DB: cloud_cost_analyzer
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_DB: cloudcost
+      POSTGRES_USER: cloudcost
+      POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
     volumes:
       - cloud_cost_analyzer_postgres_data:/var/lib/postgresql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: [ "CMD-SHELL", "pg_isready -U cloudcost" ]
       interval: 10s
       timeout: 5s
       retries: 5
