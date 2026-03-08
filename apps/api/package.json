@@ -1,0 +1,31 @@
+{
+    "name": "@cloud_cost_analyzer/api",
+    "version": "0.1.0",
+    "main": "dist/server.js",
+    "type": "module",
+    "scripts": {
+        "dev": "nodemon src/server.ts",
+        "build": "rimraf dist && tsc",
+        "start": "node dist/server.js",
+        "lint": "eslint src"
+    },
+    "dependencies": {
+        "@cloud_cost_analyzer/db": "*",
+        "@cloud_cost_analyzer/env": "*",
+        "cors": "^2.8.5",
+        "dotenv": "^17.2.2",
+        "express": "^5.1.0",
+        "helmet": "^8.0.0",
+        "zod": "^4.1.13"
+    },
+    "devDependencies": {
+        "@cloud_cost_analyzer/config": "*",
+        "@types/cors": "^2.8.17",
+        "@types/express": "^5.0.1",
+        "@types/node": "^22.10.2",
+        "nodemon": "^3.1.9",
+        "rimraf": "^6.0.1",
+        "ts-node": "^10.9.2",
+        "typescript": "^5"
+    }
+}

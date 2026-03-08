@@ -13,6 +13,7 @@
     "dev:native": "turbo -F native dev",
     "dev:web": "turbo -F web dev",
     "dev:server": "turbo -F server dev",
+    "dev:api": "turbo -F @cloud_cost_analyzer/api dev",
     "db:push": "turbo -F @cloud_cost_analyzer/db db:push",
     "db:studio": "turbo -F @cloud_cost_analyzer/db db:studio",
     "db:generate": "turbo -F @cloud_cost_analyzer/db db:generate",
