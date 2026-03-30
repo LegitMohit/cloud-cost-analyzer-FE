@@ -1,21 +1,19 @@
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
-import dotenv from "dotenv";
+import { env } from "@cloud_cost_analyzer/env/server";
 import cookieParser from "cookie-parser";
 import routes from "./routes/index.js";
 import { errorHandler } from "./middleware/error.middleware.js";
 
-dotenv.config();
-
 const app = express();
-const PORT = process.env.PORT || 4000;
+const PORT = env.PORT;
 
 // Middleware
 app.use(helmet());
 app.use(
     cors({
-        origin: process.env.CORS_ORIGIN || "http://localhost:3001",
+        origin: env.CORS_ORIGIN,
         credentials: true,
     })
 );
