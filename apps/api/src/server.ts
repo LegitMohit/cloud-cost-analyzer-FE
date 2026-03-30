@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 import routes from "./routes/index.js";
 import { errorHandler } from "./middleware/error.middleware.js";
 
@@ -14,6 +15,7 @@ const PORT = process.env.PORT || 4000;
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 // Routes
 app.use("/api/v1", routes);
@@ -22,7 +24,7 @@ app.use("/api/v1", routes);
 app.use(errorHandler);
 
 // Root path
-app.get("/", (req, res) => {
+app.get("/", (_req, res) => {
     res.json({ message: "Cloud Cost Analyzer API is running!" });
 });
 
