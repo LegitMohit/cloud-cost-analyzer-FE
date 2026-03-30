@@ -1,11 +1,13 @@
 import type { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import ms from "ms";
 import { prisma } from "@cloud_cost_analyzer/db";
 import { z } from "zod";
 
-const JWT_SECRET = process.env.JWT_SECRET || "fallback_secret_for_development";
+const JWT_SECRET = process.env.JWT_SECRET || "SomeRandomStringForDev";
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "7d";
+const COOKIE_MAX_AGE = ms(JWT_EXPIRES_IN as ms.StringValue) ?? 7 * 24 * 60 * 60 * 1000; // this is to keep sync with JWT_EXPIRES_IN
 
 const registerSchema = z.object({
     email: z.string().email(),
@@ -46,7 +48,7 @@ export const register = async (req: Request, res: Response) => {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
-            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+            maxAge: COOKIE_MAX_AGE
         });
 
         return res.status(201).json({
@@ -88,7 +90,7 @@ export const login = async (req: Request, res: Response) => {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
-            maxAge: 7 * 24 * 60 * 60 * 1000,
+            maxAge:COOKIE_MAX_AGE
         });
 
         return res.status(200).json({

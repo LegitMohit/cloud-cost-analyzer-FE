@@ -2,7 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { prisma } from "@cloud_cost_analyzer/db";
 
-const JWT_SECRET = process.env.JWT_SECRET || "fallback_secret_for_development";
+const JWT_SECRET = process.env.JWT_SECRET || "SomeRandomStringForDev";
 
 export interface AuthRequest extends Request {
     user?: any;

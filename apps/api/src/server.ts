@@ -13,12 +13,17 @@ const PORT = process.env.PORT || 4000;
 
 // Middleware
 app.use(helmet());
-app.use(cors());
+app.use(
+    cors({
+        origin: process.env.CORS_ORIGIN || "http://localhost:3001",
+        credentials: true,
+    })
+);
 app.use(express.json());
 app.use(cookieParser());
 
 // Routes
-app.use("/api/v1", routes);
+app.use("/", routes);
 
 // Error Handling
 app.use(errorHandler);
