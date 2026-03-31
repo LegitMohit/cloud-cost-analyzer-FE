@@ -2,7 +2,6 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import { env } from "@cloud_cost_analyzer/env/server";
-import cookieParser from "cookie-parser";
 import routes from "./routes/index.js";
 import { errorHandler } from "./middleware/error.middleware.js";
 
@@ -18,7 +17,6 @@ app.use(
     })
 );
 app.use(express.json());
-app.use(cookieParser());
 
 // Routes
 app.use("/", routes);
