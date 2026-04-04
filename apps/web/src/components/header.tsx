@@ -1,9 +1,12 @@
+"use client";
+
 import Link from "next/link";
-import { SignedIn, SignedOut, UserButton, SignInButton } from "@clerk/nextjs";
+import { useAuth, UserButton, SignInButton } from "@clerk/nextjs";
 
 import { ModeToggle } from "./mode-toggle";
 
 export default function Header() {
+  const { isSignedIn } = useAuth();
   const links = [{ to: "/", label: "Home" }] as const;
 
   return (
@@ -20,16 +23,15 @@ export default function Header() {
         </nav>
         <div className="flex items-center gap-2">
           <ModeToggle />
-          <SignedIn>
+          {isSignedIn ? (
             <UserButton />
-          </SignedIn>
-          <SignedOut>
+          ) : (
             <SignInButton>
               <button className="rounded-lg bg-indigo-600 px-4 py-1.5 text-sm font-semibold text-white hover:bg-indigo-500 transition-colors">
                 Sign In
               </button>
             </SignInButton>
-          </SignedOut>
+          )}
         </div>
       </div>
       <hr />
