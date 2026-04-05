@@ -2,6 +2,7 @@
 import Link from "next/link";
 
 import { ModeToggle } from "./mode-toggle";
+import { ProfileMenu } from "./profile-menu";
 
 export default function Header() {
   const links = [{ to: "/", label: "Home" }] as const;
@@ -19,6 +20,7 @@ export default function Header() {
           })}
         </nav>
         <div className="flex items-center gap-2">
+          <ProfileMenu />
           <ModeToggle />
         </div>
       </div>

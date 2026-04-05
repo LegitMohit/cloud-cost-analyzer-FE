@@ -45,7 +45,7 @@ function LoginForm() {
 
             // Instead of relying purely on cookies on the frontend to redirect (since it's httpOnly), 
             // we just redirect when the response is ok.
-            router.push("/");
+            window.location.href = "/";
         } catch (err: any) {
             setError(err.message);
         } finally {
