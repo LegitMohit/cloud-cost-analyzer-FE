@@ -8,8 +8,8 @@ export default function Header() {
   const links = [{ to: "/", label: "Home" }] as const;
 
   return (
-    <div>
-      <div className="flex flex-row items-center justify-between px-2 py-1">
+    <header className="border-b border-zinc-800">
+      <div className="flex flex-row items-center justify-between px-4 py-3">
         <nav className="flex gap-4 text-lg">
           {links.map(({ to, label }) => {
             return (
@@ -24,7 +24,6 @@ export default function Header() {
           <ModeToggle />
         </div>
       </div>
-      <hr />
-    </div>
+    </header>
   );
 }
