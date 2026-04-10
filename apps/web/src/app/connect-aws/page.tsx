@@ -35,7 +35,7 @@ export default function ConnectAWSPage() {
 
     try {
       const result = await awsApi.connect({ accessKey, secretKey, region });
-      alert(`Connected! ${result.resourcesFetched} resources fetched.`);
+      alert(`${result.message} (${result.resourcesFetched} resources fetched)`);
       router.push("/");
     } catch (err: any) {
       setError(err.message || "Failed to connect AWS account");

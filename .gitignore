@@ -4,7 +4,8 @@ node_modules
 .pnp.js
 .dontPush.*
 .kilo
-
+.vscode
+.cursor
 # Build outputs
 dist
 build

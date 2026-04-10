@@ -2,17 +2,20 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { Loader2, X } from "lucide-react";
 
 interface AWSResource {
   id: string;
   resourceType: string;
   resourceId: string;
-  status: string;
+  resourceStatus: string;
+  awsAccountUsername: string;
 }
 
 export default function Home() {
   const [resources, setResources] = useState<AWSResource[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedType, setSelectedType] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchResources() {
@@ -39,6 +42,18 @@ export default function Home() {
     { type: "S3", icon: "🪣", count: resources.filter((r) => r.resourceType === "S3").length },
     { type: "RDS", icon: "🗄️", count: resources.filter((r) => r.resourceType === "RDS").length },
   ];
+
+  const filteredResources = selectedType
+    ? resources.filter((r) => r.resourceType === selectedType)
+    : [];
+
+  const resourcesByAccount = filteredResources.reduce((acc, resource) => {
+    if (!acc[resource.awsAccountUsername]) {
+      acc[resource.awsAccountUsername] = [];
+    }
+    acc[resource.awsAccountUsername].push(resource);
+    return acc;
+  }, {} as Record<string, AWSResource[]>);
 
   return (
     <div className="container mx-auto max-w-3xl px-4 py-2">
@@ -69,14 +84,15 @@ export default function Home() {
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {resourceTypes.map((rt) => (
-                <div
+                <button
                   key={rt.type}
-                  className="rounded-lg border border-zinc-800 bg-zinc-900 p-4 text-center"
+                  onClick={() => setSelectedType(rt.type)}
+                  className="rounded-lg border border-zinc-800 bg-zinc-900 p-4 text-center hover:border-zinc-700 hover:bg-zinc-800 transition-colors"
                 >
                   <div className="text-2xl mb-2">{rt.icon}</div>
                   <div className="text-2xl font-bold text-white">{rt.count}</div>
                   <div className="text-sm text-zinc-400">{rt.type}</div>
-                </div>
+                </button>
               ))}
             </div>
           )}
@@ -92,6 +108,60 @@ export default function Home() {
           </Link>
         </section>
       </div>
+
+      {selectedType && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+          <div className="w-full max-w-2xl max-h-[80vh] overflow-y-auto rounded-xl border border-zinc-800 bg-zinc-900 p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-semibold text-white">
+                {selectedType} Resources
+              </h3>
+              <button
+                onClick={() => setSelectedType(null)}
+                className="rounded-lg p-2 text-zinc-400 hover:bg-zinc-800 hover:text-white transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {Object.keys(resourcesByAccount).length === 0 ? (
+              <p className="text-zinc-400 text-center py-8">No {selectedType} resources found</p>
+            ) : (
+              <div className="space-y-6">
+                {Object.entries(resourcesByAccount).map(([accountName, accountResources]) => (
+                  <div key={accountName} className="rounded-lg border border-zinc-800 bg-zinc-800/30 p-4">
+                    <h4 className="text-lg font-medium text-white mb-3 flex items-center gap-2">
+                      ☁️ {accountName}
+                      <span className="text-sm font-normal text-zinc-400">
+                        ({accountResources.length} resources)
+                      </span>
+                    </h4>
+                    <div className="space-y-2">
+                      {accountResources.map((resource) => (
+                        <div
+                          key={resource.id}
+                          className="flex items-center justify-between rounded-lg bg-zinc-800/50 px-4 py-2"
+                        >
+                          <span className="text-zinc-300 font-mono text-sm">{resource.resourceId}</span>
+                          <span className={`text-xs px-2 py-1 rounded ${
+                            resource.resourceStatus === "running" || resource.resourceStatus === "active"
+                              ? "bg-green-500/20 text-green-400"
+                              : resource.resourceStatus === "stopped" || resource.resourceStatus === "inactive"
+                              ? "bg-red-500/20 text-red-400"
+                              : "bg-zinc-700 text-zinc-400"
+                          }`}>
+                            {resource.resourceStatus}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
