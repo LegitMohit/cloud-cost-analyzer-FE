@@ -62,6 +62,7 @@ export const awsApi = {
   },
 
   getCostAndUsage: async (options: {
+    accountId?: string;
     startDate: string;
     endDate: string;
     granularity?: "DAILY" | "MONTHLY" | "HOURLY";
@@ -72,7 +73,17 @@ export const awsApi = {
     });
     const data = await res.json();
     if (!res.ok) {
-      throw new Error(data.error || "Failed to get cost data");
+      const errorMessage = data.error?.message || data.error || "Failed to get cost data";
+      throw new Error(errorMessage);
+    }
+    return data;
+  },
+
+  getConnectedAccounts: async () => {
+    const res = await fetchWithAuth("/aws/connected-accounts");
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || "Failed to fetch connected accounts");
     }
     return data;
   },

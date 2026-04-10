@@ -1,11 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { awsApi, type CostData } from "@/lib/api";
+import { Loader2 } from "lucide-react";
+
+interface ConnectedAccount {
+  id: string;
+  awsAccountUsername: string;
+  accessKey: string;
+  region: string;
+}
 
 export default function CostsPage() {
+  const [accounts, setAccounts] = useState<ConnectedAccount[]>([]);
+  const [selectedAccountId, setSelectedAccountId] = useState<string>("");
+  const [loading, setLoading] = useState(true);
+  const [fetching, setFetching] = useState(false);
   const [costData, setCostData] = useState<CostData | null>(null);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [startDate, setStartDate] = useState(() => {
     const date = new Date();
@@ -17,18 +28,79 @@ export default function CostsPage() {
   });
   const [granularity, setGranularity] = useState<"DAILY" | "MONTHLY" | "HOURLY">("MONTHLY");
 
+  useEffect(() => {
+    if (granularity === "HOURLY") {
+      const end = new Date(endDate);
+      const start = new Date(end);
+      start.setDate(start.getDate() - 14);
+      setStartDate(start.toISOString().split("T")[0]);
+    }
+  }, [granularity, endDate]);
+
+  useEffect(() => {
+    async function fetchAccounts() {
+      try {
+        const response = await awsApi.getConnectedAccounts();
+        console.log("Connected accounts response:", response);
+        const accountsData = Array.isArray(response) 
+          ? response 
+          : (response?.accounts || []);
+        setAccounts(accountsData);
+        if (accountsData.length > 0) {
+          setSelectedAccountId(accountsData[0].id);
+        }
+      } catch (err: any) {
+        console.error("Failed to fetch accounts:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchAccounts();
+  }, []);
+
   const fetchCosts = async () => {
-    setLoading(true);
+    if (!selectedAccountId) {
+      setError("Please select an AWS account");
+      return;
+    }
+    setFetching(true);
     setError("");
     try {
-      const data = await awsApi.getCostAndUsage({ startDate, endDate, granularity });
+      const data = await awsApi.getCostAndUsage({
+        accountId: selectedAccountId,
+        startDate,
+        endDate,
+        granularity,
+      });
       setCostData(data);
     } catch (err: any) {
       setError(err.message || "Failed to fetch cost data");
     } finally {
-      setLoading(false);
+      setFetching(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="container mx-auto max-w-4xl px-4 py-8 flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-zinc-400" />
+      </div>
+    );
+  }
+
+  if (accounts.length === 0) {
+    return (
+      <div className="container mx-auto max-w-4xl px-4 py-8">
+        <h1 className="text-3xl font-bold text-white mb-8">Cost Analysis</h1>
+        <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-6 text-center">
+          <p className="text-zinc-400 mb-4">No AWS accounts connected.</p>
+          <a href="/connect-aws" className="text-indigo-400 hover:text-indigo-300 font-medium">
+            Connect an AWS account →
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto max-w-4xl px-4 py-8">
@@ -36,6 +108,20 @@ export default function CostsPage() {
 
       <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-6 mb-6">
         <div className="flex flex-wrap gap-4 items-end">
+          <div>
+            <label className="block text-sm font-medium text-zinc-300 mb-2">AWS Account</label>
+            <select
+              value={selectedAccountId}
+              onChange={(e) => setSelectedAccountId(e.target.value)}
+              className="rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-2 text-white min-w-[200px]"
+            >
+              {accounts.map((account) => (
+                <option key={account.id} value={account.id}>
+                  {account.awsAccountUsername} ({account.region})
+                </option>
+              ))}
+            </select>
+          </div>
           <div>
             <label className="block text-sm font-medium text-zinc-300 mb-2">Start Date</label>
             <input
@@ -68,10 +154,10 @@ export default function CostsPage() {
           </div>
           <button
             onClick={fetchCosts}
-            disabled={loading}
+            disabled={fetching}
             className="rounded-lg bg-indigo-600 px-6 py-2 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-50"
           >
-            {loading ? "Loading..." : "Fetch Costs"}
+            {fetching ? "Loading..." : "Fetch Costs"}
           </button>
         </div>
       </div>
@@ -87,7 +173,7 @@ export default function CostsPage() {
           <div className="mb-6">
             <h2 className="text-xl font-semibold text-white mb-2">Total Cost</h2>
             <p className="text-3xl font-bold text-green-400">
-              ${costData.totalCost.toFixed(2)}
+              ${costData.totalCost}
             </p>
             <p className="text-sm text-zinc-400">
               {costData.startDate} to {costData.endDate}
@@ -107,7 +193,7 @@ export default function CostsPage() {
                   >
                     <span className="text-zinc-300">{service.serviceName}</span>
                     <span className="text-white font-medium">
-                      ${service.cost.toFixed(2)}
+                      ${service.cost}
                     </span>
                   </div>
                 ))}
