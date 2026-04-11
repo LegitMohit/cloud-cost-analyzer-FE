@@ -50,6 +50,11 @@ export function ProfileMenu() {
     router.push("/login");
   };
 
+  const handleChangePassword = () => {
+    setOpen(false);
+    router.push("/change-password" as any);
+  };
+
   if (loading) {
     return (
       <div className="flex h-9 w-9 items-center justify-center rounded-full bg-zinc-200 dark:bg-zinc-700">
@@ -81,6 +86,12 @@ export function ProfileMenu() {
               <div className="border-b border-zinc-200 px-3 py-2 text-sm text-zinc-600 dark:border-zinc-800 dark:text-zinc-400">
                 {user.email}
               </div>
+              <button
+                onClick={handleChangePassword}
+                className="mt-1 w-full rounded-md px-3 py-2 text-left text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+              >
+                Change Password
+              </button>
               <button
                 onClick={handleLogout}
                 className="mt-1 w-full rounded-md px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"

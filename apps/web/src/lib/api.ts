@@ -138,4 +138,17 @@ export const awsApi = {
     }
     return data;
   },
+
+  changePassword: async (currentPassword: string, newPassword: string) => {
+    const res = await fetchWithAuth("/auth/change-password", {
+      method: "POST",
+      body: JSON.stringify({ currentPassword, newPassword }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      const errorMessage = data.error?.message || data.error || "Failed to change password";
+      throw new Error(errorMessage);
+    }
+    return data;
+  },
 };
