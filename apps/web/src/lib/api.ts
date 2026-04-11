@@ -105,6 +105,18 @@ export const awsApi = {
     return data;
   },
 
+  deleteAWSAccount: async (accountId: string) => {
+    const res = await fetchWithAuth(`/aws/accounts/${accountId}`, {
+      method: "DELETE",
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || "Failed to delete AWS account");
+    }
+    return data;
+  },
+
+
   getMonthlyForecast: async (month: string): Promise<number> => {
     const res = await fetchWithAuth(`/aws/cost/forecast?month=${month}`, {
       method: "GET",

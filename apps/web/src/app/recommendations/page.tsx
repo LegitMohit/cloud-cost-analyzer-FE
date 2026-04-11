@@ -41,6 +41,7 @@ export default function RecommendationsPage() {
       }
     } catch (err) {
       console.error("Failed to fetch accounts:", err);
+    } finally {
       setLoading(false);
     }
   };
