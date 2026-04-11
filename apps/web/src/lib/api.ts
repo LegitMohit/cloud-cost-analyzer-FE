@@ -43,6 +43,23 @@ export interface ServiceCost {
   cost: number;
 }
 
+export interface Recommendation {
+  id: string;
+  issue: string;
+  recommendation: string;
+  estimatedSavings: number;
+  resourceId: string;
+  resourceType: string;
+  resourceIdentifier: string;
+  awsAccountUsername: string;
+}
+
+export interface RecommendationResponse {
+  recommendations: Recommendation[];
+  totalSavings: number;
+  count: number;
+}
+
 export const awsApi = {
   connect: async (credentials: {
     accessKey: string;
@@ -97,5 +114,28 @@ export const awsApi = {
       throw new Error(data.error || "Failed to get forecast");
     }
     return data.forecast;
+  },
+
+  generateRecommendations: async (accountId?: string) => {
+    const res = await fetchWithAuth("/aws/recommendations/generate", {
+      method: "POST",
+      body: JSON.stringify(accountId ? { accountId } : {}),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      const errorMessage = data.error?.message || data.error || "Failed to generate recommendations";
+      throw new Error(errorMessage);
+    }
+    return data;
+  },
+
+  getRecommendations: async (accountId?: string): Promise<RecommendationResponse> => {
+    const url = accountId ? `/aws/recommendations?accountId=${accountId}` : "/aws/recommendations";
+    const res = await fetchWithAuth(url);
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || "Failed to fetch recommendations");
+    }
+    return data;
   },
 };

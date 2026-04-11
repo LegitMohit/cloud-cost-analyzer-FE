@@ -100,12 +100,20 @@ export default function Home() {
 
         <section className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-6">
           <h2 className="text-xl font-semibold text-white mb-4">Cost Overview</h2>
-          <Link
-            href={{ pathname: "/costs" }}
-            className="text-indigo-400 hover:text-indigo-300 font-medium"
-          >
-            View Cost Analysis →
-          </Link>
+          <div className="flex flex-col gap-2">
+            <Link
+              href={{ pathname: "/costs" }}
+              className="text-indigo-400 hover:text-indigo-300 font-medium"
+            >
+              View Cost Analysis →
+            </Link>
+            <Link
+              href={{ pathname: "/recommendations" }}
+              className="text-emerald-400 hover:text-emerald-300 font-medium"
+            >
+              View Recommendations →
+            </Link>
+          </div>
         </section>
       </div>
 
