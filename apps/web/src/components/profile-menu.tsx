@@ -42,7 +42,7 @@ export function ProfileMenu() {
   const handleLogout = async () => {
     await logout();
     setOpen(false);
-    router.refresh();
+    router.push("/login");
   };
 
   const handleLogin = () => {

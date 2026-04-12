@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
-export default function SignupPage() {
+function SignupForm() {
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const redirectTo = searchParams.get("redirect") || "/";
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -31,7 +33,8 @@ export default function SignupPage() {
                 throw new Error(data.error || "Something went wrong");
             }
 
-            router.push("/login?registered=true");
+            const redirectParam = redirectTo !== "/" ? `&redirect=${encodeURIComponent(redirectTo)}` : "";
+            router.push(`/login?registered=true${redirectParam}`);
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -100,5 +103,13 @@ export default function SignupPage() {
                 </p>
             </div>
         </div>
+    );
+}
+
+export default function SignupPage() {
+    return (
+        <Suspense fallback={<div className="flex min-h-screen items-center justify-center bg-zinc-950 text-white">Loading...</div>}>
+            <SignupForm />
+        </Suspense>
     );
 }

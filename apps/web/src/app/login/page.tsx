@@ -7,6 +7,7 @@ function LoginForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const registered = searchParams.get("registered");
+    const redirectTo = searchParams.get("redirect") || "/";
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -33,7 +34,6 @@ function LoginForm() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ email, password }),
-                // Need credentials for setting cookie
                 credentials: "include",
             });
 
@@ -43,9 +43,7 @@ function LoginForm() {
                 throw new Error(data.error || "Invalid login credentials");
             }
 
-            // Instead of relying purely on cookies on the frontend to redirect (since it's httpOnly), 
-            // we just redirect when the response is ok.
-            window.location.href = "/";
+            window.location.href = redirectTo;
         } catch (err: any) {
             setError(err.message);
         } finally {
