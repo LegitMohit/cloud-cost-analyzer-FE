@@ -17,8 +17,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "cloud_cost_analyzer",
-  description: "cloud_cost_analyzer",
+  title: "Cloud Vento",
+  description: "Cloud Vento - AI-Powered Cloud Cost Optimization",
 };
 
 export default function RootLayout({
@@ -32,7 +32,7 @@ export default function RootLayout({
         <Providers>
           <div className="flex flex-col min-h-svh">
             <Header />
-            <main className="flex-1">{children}</main>
+            <main className="flex-1 pt-16">{children}</main>
           </div>
         </Providers>
       </body>
