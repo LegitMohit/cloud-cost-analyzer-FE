@@ -84,24 +84,6 @@ export default function RecommendationsPage() {
     );
   }
 
-  if (accounts.length === 0) {
-    return (
-      <div className="container mx-auto max-w-4xl px-4 py-8">
-        <div className="mb-6">
-          <Link href="/" className="text-indigo-400 hover:text-indigo-300 font-medium">
-            ← Back to Dashboard
-          </Link>
-        </div>
-        <h1 className="text-3xl font-bold text-white mb-8">AWS Recommendations</h1>
-        <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-6 text-center">
-          <p className="text-zinc-400 mb-4">No AWS accounts connected.</p>
-          <a href="/connect-aws" className="text-indigo-400 hover:text-indigo-300 font-medium">
-            Connect an AWS account →
-          </a>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="container mx-auto max-w-4xl px-4 py-8">
@@ -119,6 +101,7 @@ export default function RecommendationsPage() {
             <label className="block text-sm font-medium text-zinc-300 mb-2">AWS Account</label>
             <select
               value={selectedAccountId}
+              disabled={accounts.length === 0}
               onChange={(e) => setSelectedAccountId(e.target.value)}
               className="w-full rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-2 text-white"
             >
@@ -131,7 +114,7 @@ export default function RecommendationsPage() {
           </div>
           <button
             onClick={handleGenerate}
-            disabled={generating}
+            disabled={generating || accounts.length === 0}
             className="rounded-lg bg-emerald-600 px-6 py-2 text-sm font-semibold text-white hover:bg-emerald-500 disabled:opacity-50 flex items-center gap-2"
           >
             {generating && <Loader2 className="h-4 w-4 animate-spin" />}
@@ -141,6 +124,18 @@ export default function RecommendationsPage() {
         <p className="text-zinc-400 text-sm mt-3">
           Analyze your AWS resources and get cost optimization recommendations
         </p>
+        {accounts.length === 0 && (
+          <div className="text-center pt-6">
+            <p className="text-red-400">No AWS account is connected.
+            <Link
+              href={{ pathname: "/connect-aws" }}
+              className="text-indigo-400 hover:text-indigo-300 font-medium"
+            >
+              Connect here
+            </Link>
+            </p>
+          </div>
+        )}
       </div>
 
       {error && (

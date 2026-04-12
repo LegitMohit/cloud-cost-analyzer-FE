@@ -100,6 +100,13 @@ export default function Home() {
     try {
       await awsApi.deleteAWSAccount(accountId);
       setAccounts(accounts.filter((a) => a.id !== accountId));
+      const [resourcesRes] = await Promise.all([
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/aws/resources`, { credentials: "include" }),
+      ]);
+      if (resourcesRes.ok) {
+        const data = await resourcesRes.json();
+        setResources(data.resources || []);
+      }
     } catch (error) {
       alert(error instanceof Error ? error.message : "Failed to delete");
     } finally {

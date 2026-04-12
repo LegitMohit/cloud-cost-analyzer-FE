@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { awsApi, type CostData } from "@/lib/api";
 import { Loader2 } from "lucide-react";
+import Link from "next/link";
 
 interface ConnectedAccount {
   id: string;
@@ -88,19 +89,6 @@ export default function CostsPage() {
     );
   }
 
-  if (accounts.length === 0) {
-    return (
-      <div className="container mx-auto max-w-4xl px-4 py-8">
-        <h1 className="text-3xl font-bold text-white mb-8">Cost Analysis</h1>
-        <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-6 text-center">
-          <p className="text-zinc-400 mb-4">No AWS accounts connected.</p>
-          <a href="/connect-aws" className="text-indigo-400 hover:text-indigo-300 font-medium">
-            Connect an AWS account →
-          </a>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="container mx-auto max-w-4xl px-4 py-8">
@@ -113,7 +101,8 @@ export default function CostsPage() {
             <select
               value={selectedAccountId}
               onChange={(e) => setSelectedAccountId(e.target.value)}
-              className="rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-2 text-white min-w-[200px]"
+              disabled={accounts.length === 0}
+              className="rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-2 text-white min-w-[200px] disabled:opacity-50"
             >
               {accounts.map((account) => (
                 <option key={account.id} value={account.id}>
@@ -128,7 +117,8 @@ export default function CostsPage() {
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-2 text-white"
+              disabled={accounts.length === 0}
+              className="rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-2 text-white disabled:opacity-50"
             />
           </div>
           <div>
@@ -137,7 +127,8 @@ export default function CostsPage() {
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-2 text-white"
+              disabled={accounts.length === 0}
+              className="rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-2 text-white disabled:opacity-50"
             />
           </div>
           <div>
@@ -145,7 +136,8 @@ export default function CostsPage() {
             <select
               value={granularity}
               onChange={(e) => setGranularity(e.target.value as "DAILY" | "MONTHLY" | "HOURLY")}
-              className="rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-2 text-white"
+              disabled={accounts.length === 0}
+              className="rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-2 text-white disabled:opacity-50"
             >
               <option value="DAILY">Daily</option>
               <option value="MONTHLY">Monthly</option>
@@ -154,12 +146,25 @@ export default function CostsPage() {
           </div>
           <button
             onClick={fetchCosts}
-            disabled={fetching}
+            disabled={fetching || accounts.length === 0}
             className="rounded-lg bg-indigo-600 px-6 py-2 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-50"
           >
             {fetching ? "Loading..." : "Fetch Costs"}
           </button>
         </div>
+        
+        {accounts.length === 0 && (
+          <div className="text-center pt-6">
+            <p className="text-red-400">No AWS account is connected.
+            <Link
+              href={{ pathname: "/connect-aws" }}
+              className="text-indigo-400 hover:text-indigo-300 font-medium"
+            >
+              Connect here
+            </Link>
+            </p>
+          </div>
+        )}
       </div>
 
       {error && (
