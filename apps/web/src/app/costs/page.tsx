@@ -104,7 +104,7 @@ export default function CostsPage() {
     <div className="min-h-screen bg-[#0A0A0F] px-4 py-10 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl flex flex-col gap-6">
         <Link
-          href="/"
+          href={{ pathname: "/aws" }}
           className="inline-flex items-center gap-2 text-zinc-400 hover:text-white text-sm transition-colors w-fit"
         >
           <ArrowLeft className="w-4 h-4" />
