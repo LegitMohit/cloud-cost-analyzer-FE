@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
-import { Zap } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 function LoginForm() {
