@@ -39,7 +39,7 @@ export function ProfileMenu() {
   const handleLogout = async () => {
     await logout();
     setOpen(false);
-    router.push("/login");
+    router.push("/");
   };
 
   const handleLogin = () => {
