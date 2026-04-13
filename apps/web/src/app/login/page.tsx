@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
+import { Zap } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 function LoginForm() {
@@ -52,69 +53,71 @@ function LoginForm() {
     };
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-zinc-950 p-4">
-            <div className="w-full max-w-md rounded-2xl border border-zinc-800 bg-zinc-900 p-8 shadow-xl">
-                <div className="mb-8 text-center">
-                    <h1 className="text-3xl font-bold text-white tracking-tight">Welcome Back</h1>
-                    <p className="mt-2 text-zinc-400">Log in to your account</p>
+        <div className="min-h-[calc(100vh-64px)] bg-[#0A0A0F] flex items-center justify-center px-4">
+            <div className="w-full max-w-md">
+                <div className="text-center mb-10">
+                    <h1 className="text-4xl font-bold text-white mb-3 tracking-tight">Welcome Back</h1>
+                    <p className="text-zinc-400">Log in to your Cloud Vento account</p>
                 </div>
 
-                {message && (
-                    <div className="mb-6 rounded-lg bg-green-500/10 p-4 text-sm text-green-500 border border-green-500/20">
-                        {message}
-                    </div>
-                )}
+                <div className="rounded-[1.75rem] border border-[#1E1E2E] bg-[#111118]/80 p-8 shadow-xl shadow-violet-500/10">
+                    {message && (
+                        <div className="mb-6 rounded-2xl bg-green-500/10 border border-green-500/20 p-4 text-sm text-green-400">
+                            {message}
+                        </div>
+                    )}
 
-                {error && (
-                    <div className="mb-6 rounded-lg bg-red-500/10 p-4 text-sm text-red-500 border border-red-500/20">
-                        {error}
-                    </div>
-                )}
+                    {error && (
+                        <div className="mb-6 rounded-2xl bg-red-500/10 border border-red-500/20 p-4 text-sm text-red-400">
+                            {error}
+                        </div>
+                    )}
 
-                <form onSubmit={handleLogin} className="space-y-6">
-                    <div>
-                        <label className="block text-sm font-medium text-zinc-300 mb-2">
-                            Email Address
-                        </label>
-                        <input
-                            type="email"
-                            required
-                            className="w-full rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-3 text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors"
-                            placeholder="you@example.com"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                    </div>
+                    <form onSubmit={handleLogin} className="space-y-6">
+                        <div>
+                            <label className="block text-sm font-medium text-zinc-300 mb-2">
+                                Email Address
+                            </label>
+                            <input
+                                type="email"
+                                required
+                                className="w-full rounded-2xl border border-[#1E1E2E] bg-[#0D1019]/90 px-4 py-3.5 text-white placeholder-zinc-500 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500 transition-colors"
+                                placeholder="you@example.com"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                        </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-zinc-300 mb-2">
-                            Password
-                        </label>
-                        <input
-                            type="password"
-                            required
-                            className="w-full rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-3 text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors"
-                            placeholder="••••••••"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                    </div>
+                        <div>
+                            <label className="block text-sm font-medium text-zinc-300 mb-2">
+                                Password
+                            </label>
+                            <input
+                                type="password"
+                                required
+                                className="w-full rounded-2xl border border-[#1E1E2E] bg-[#0D1019]/90 px-4 py-3.5 text-white placeholder-zinc-500 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500 transition-colors"
+                                placeholder="••••••••"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </div>
 
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full rounded-lg bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                    >
-                        {loading ? "Logging in..." : "Log In"}
-                    </button>
-                </form>
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full rounded-full bg-gradient-to-r from-violet-600 to-violet-500 px-4 py-3.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 hover:from-violet-500 hover:to-violet-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.98]"
+                        >
+                            {loading ? "Logging in..." : "Log In"}
+                        </button>
+                    </form>
 
-                <p className="mt-6 text-center text-sm text-zinc-400">
-                    Don't have an account?{" "}
-                    <a href="/signup" className="font-semibold text-indigo-400 hover:text-indigo-300">
-                        Sign up
-                    </a>
-                </p>
+                    <p className="mt-8 text-center text-sm text-zinc-400">
+                        Don't have an account?{" "}
+                        <a href="/signup" className="font-semibold text-violet-400 hover:text-violet-300 transition-colors">
+                            Sign up
+                        </a>
+                    </p>
+                </div>
             </div>
         </div>
     );
