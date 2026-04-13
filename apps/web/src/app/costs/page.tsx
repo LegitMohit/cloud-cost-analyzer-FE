@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { awsApi, type CostData } from "@/lib/api";
-import { Loader2 } from "lucide-react";
+import { Loader2, DollarSign, Calendar, PieChart, TrendingUp, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 interface ConnectedAccount {
@@ -10,6 +10,15 @@ interface ConnectedAccount {
   awsAccountUsername: string;
   accessKey: string;
   region: string;
+}
+
+function formatToTwoDecimals(num: number) {
+  const [intPart, decimalPart = ""] = num.toString().split(".");
+  const trimmedDecimal = decimalPart.slice(0, 2);
+  const formatted = trimmedDecimal
+    ? `${intPart}.${trimmedDecimal}`
+    : intPart;
+  return formatted === "0.00" || formatted === "0.0" || formatted === "-0.0" || formatted === "-0.00" ? "0" : formatted;
 }
 
 export default function CostsPage() {
@@ -42,7 +51,6 @@ export default function CostsPage() {
     async function fetchAccounts() {
       try {
         const response = await awsApi.getConnectedAccounts();
-        console.log("Connected accounts response:", response);
         const accountsData = Array.isArray(response) 
           ? response 
           : (response?.accounts || []);
@@ -83,135 +91,175 @@ export default function CostsPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto max-w-4xl px-4 py-8 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-zinc-400" />
+      <div className="min-h-screen bg-[#0A0A0F] flex items-center justify-center px-4 py-12">
+        <div className="flex items-center gap-3 text-zinc-400">
+          <Loader2 className="h-6 w-6 animate-spin text-violet-400" />
+          <span>Loading...</span>
+        </div>
       </div>
     );
   }
 
-
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-8">
-      <h1 className="text-3xl font-bold text-white mb-8">Cost Analysis</h1>
+    <div className="min-h-screen bg-[#0A0A0F] px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl flex flex-col gap-6">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-zinc-400 hover:text-white text-sm transition-colors w-fit"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Dashboard
+        </Link>
 
-      <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-6 mb-6">
-        <div className="flex flex-wrap gap-4 items-end">
-          <div>
-            <label className="block text-sm font-medium text-zinc-300 mb-2">AWS Account</label>
-            <select
-              value={selectedAccountId}
-              onChange={(e) => setSelectedAccountId(e.target.value)}
-              disabled={accounts.length === 0}
-              className="rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-2 text-white min-w-[200px] disabled:opacity-50"
-            >
-              {accounts.map((account) => (
-                <option key={account.id} value={account.id}>
-                  {account.awsAccountUsername} ({account.region})
-                </option>
-              ))}
-            </select>
+        <section className="rounded-[2rem] border border-[#1E1E2E] bg-[#0A0B10]/80 p-8 shadow-2xl shadow-violet-500/10 backdrop-blur-xl">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div className="max-w-3xl">
+              <div className="inline-flex items-center gap-2 rounded-full border border-violet-500/30 bg-violet-500/10 px-4 py-2 text-sm text-violet-200">
+                <DollarSign className="w-4 h-4" />
+                <span className="text-violet-300">Cost Analytics</span>
+              </div>
+              <h1 className="mt-4 text-3xl font-semibold text-white sm:text-4xl">Cost Analysis</h1>
+              <p className="mt-4 text-sm text-zinc-400 sm:text-base">
+                Analyze your AWS spending patterns, view cost breakdowns by service, and optimize your cloud expenses.
+              </p>
+            </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-zinc-300 mb-2">Start Date</label>
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              disabled={accounts.length === 0}
-              className="rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-2 text-white disabled:opacity-50"
-            />
+        </section>
+
+        <section className="rounded-[1.75rem] border border-[#1E1E2E] bg-[#111218]/80 p-6 shadow-xl shadow-black/20">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between mb-6">
+            <div>
+              <h2 className="text-2xl font-semibold text-white">Fetch Costs</h2>
+              <p className="mt-2 text-sm text-zinc-400">Select AWS account and date range to analyze costs.</p>
+            </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-zinc-300 mb-2">End Date</label>
-            <input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              disabled={accounts.length === 0}
-              className="rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-2 text-white disabled:opacity-50"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-zinc-300 mb-2">Granularity</label>
-            <select
-              value={granularity}
-              onChange={(e) => setGranularity(e.target.value as "DAILY" | "MONTHLY" | "HOURLY")}
-              disabled={accounts.length === 0}
-              className="rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-2 text-white disabled:opacity-50"
-            >
-              <option value="DAILY">Daily</option>
-              <option value="MONTHLY">Monthly</option>
-              <option value="HOURLY">Hourly</option>
-            </select>
-          </div>
-          <button
-            onClick={fetchCosts}
-            disabled={fetching || accounts.length === 0}
-            className="rounded-lg bg-indigo-600 px-6 py-2 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-50"
-          >
-            {fetching ? "Loading..." : "Fetch Costs"}
-          </button>
-        </div>
-        
-        {accounts.length === 0 && (
-          <div className="text-center pt-6">
-            <p className="text-red-400">No AWS account is connected.
+
+          {accounts.length === 0 ? (
+            <div className="mt-8 rounded-3xl border border-dashed border-zinc-800 bg-[#10121A]/80 p-8 text-center">
+              <p className="text-zinc-500 mb-4">No AWS account is connected.</p>
             <Link
               href={{ pathname: "/connect-aws" }}
-              className="text-indigo-400 hover:text-indigo-300 font-medium"
+              className="inline-flex items-center justify-center whitespace-nowrap rounded-full bg-gradient-to-r from-violet-600 to-violet-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:from-violet-500 hover:to-violet-400"
             >
-              Connect here
-            </Link>
-            </p>
+                Connect AWS Account
+              </Link>
+            </div>
+          ) : (
+            <div className="flex flex-wrap gap-4 items-end">
+              <div className="min-w-[200px]">
+                <label className="block text-sm font-medium text-zinc-400 mb-2">AWS Account</label>
+                <select
+                  value={selectedAccountId}
+                  onChange={(e) => setSelectedAccountId(e.target.value)}
+                  className="w-full rounded-2xl border border-zinc-700 bg-[#12151F] px-4 py-3 text-white focus:border-violet-500 focus:outline-none"
+                >
+                  {accounts.map((account) => (
+                    <option key={account.id} value={account.id}>
+                      {account.awsAccountUsername} ({account.region})
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="min-w-[160px]">
+                <label className="block text-sm font-medium text-zinc-400 mb-2">Start Date</label>
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  className="w-full rounded-2xl border border-zinc-700 bg-[#12151F] px-4 py-3 text-white focus:border-violet-500 focus:outline-none"
+                />
+              </div>
+              <div className="min-w-[160px]">
+                <label className="block text-sm font-medium text-zinc-400 mb-2">End Date</label>
+                <input
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  className="w-full rounded-2xl border border-zinc-700 bg-[#12151F] px-4 py-3 text-white focus:border-violet-500 focus:outline-none"
+                />
+              </div>
+              <div className="min-w-[140px]">
+                <label className="block text-sm font-medium text-zinc-400 mb-2">Granularity</label>
+                <select
+                  value={granularity}
+                  onChange={(e) => setGranularity(e.target.value as "DAILY" | "MONTHLY" | "HOURLY")}
+                  className="w-full rounded-2xl border border-zinc-700 bg-[#12151F] px-4 py-3 text-white focus:border-violet-500 focus:outline-none"
+                >
+                  <option value="DAILY">Daily</option>
+                  <option value="MONTHLY">Monthly</option>
+                  <option value="HOURLY">Hourly</option>
+                </select>
+              </div>
+              <button
+                onClick={fetchCosts}
+                disabled={fetching}
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-full bg-gradient-to-r from-violet-600 to-violet-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:from-violet-500 hover:to-violet-400 disabled:opacity-50"
+              >
+                {fetching ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Fetching...
+                  </>
+                ) : (
+                  "Fetch Costs"
+                )}
+              </button>
+            </div>
+          )}
+        </section>
+
+        {error && (
+          <div className="rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-400">
+            {error}
           </div>
         )}
-      </div>
 
-      {error && (
-        <div className="mb-6 rounded-lg bg-red-500/10 p-4 text-sm text-red-500 border border-red-500/20">
-          {error}
-        </div>
-      )}
-
-      {costData && (
-        <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-6">
-          <div className="mb-6">
-            <h2 className="text-xl font-semibold text-white mb-2">Total Cost</h2>
-            <p className="text-3xl font-bold text-green-400">
-              ${costData.totalCost}
-            </p>
-            <p className="text-sm text-zinc-400">
-              {costData.startDate} to {costData.endDate}
-            </p>
-          </div>
-
-          <div>
-            <h3 className="text-lg font-semibold text-white mb-4">Service Breakdown</h3>
+        {costData && (
+          <section className="rounded-[1.75rem] border border-[#1E1E2E] bg-[#111218]/80 p-6 shadow-xl shadow-black/20">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-white">
+                <PieChart className="h-5 w-5" />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold text-white">Service Breakdown</h2>
+                <p className="text-sm text-zinc-400">Costs grouped by AWS service</p>
+              </div>
+            </div>
+            <div className="mb-6 flex items-center justify-between rounded-2xl bg-violet-500/10 px-4 py-4 border border-violet-500/20">
+              <span className="text-lg font-semibold text-white">Total Cost</span>
+              <span className="text-2xl font-bold text-green-400">
+                ${formatToTwoDecimals(costData.totalCost)}
+              </span>
+            </div>
             {costData.serviceBreakdown.length === 0 ? (
-              <p className="text-zinc-400">No cost data available</p>
+              <div className="text-zinc-500 text-center py-4">No cost data available</div>
             ) : (
-              <div className="space-y-2">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {costData.serviceBreakdown.map((service, idx) => (
                   <div
                     key={idx}
-                    className="flex justify-between items-center py-2 border-b border-zinc-800"
+                    className="flex items-center justify-between rounded-2xl bg-[#0F1220] px-4 py-3"
                   >
-                    <span className="text-zinc-300">{service.serviceName}</span>
-                    <span className="text-white font-medium">
-                      ${service.cost}
+                    <span className="text-zinc-300 font-medium truncate">{service.serviceName}</span>
+                    <span className="text-white font-semibold whitespace-nowrap">
+                      ${formatToTwoDecimals(service.cost)}
                     </span>
                   </div>
                 ))}
               </div>
             )}
-          </div>
-        </div>
-      )}
+          </section>
+        )}
 
-      <div className="mt-6">
-        <a href="/" className="text-indigo-400 hover:text-indigo-300 font-medium">
-          ← Back to Dashboard
-        </a>
+        <div className="flex flex-wrap gap-3">
+          <Link
+            href={{ pathname: "/recommendations" }}
+            className="inline-flex items-center justify-center whitespace-nowrap rounded-full border border-violet-500/20 bg-white/5 px-5 py-3 text-sm font-semibold text-violet-200 transition hover:bg-white/10"
+          >
+            <TrendingUp className="w-4 h-4 mr-2" />
+            View Recommendations
+          </Link>
+        </div>
       </div>
     </div>
   );
