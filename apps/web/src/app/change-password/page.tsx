@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { awsApi } from "@/lib/api";
 
 export default function ChangePasswordPage() {
@@ -36,91 +36,108 @@ export default function ChangePasswordPage() {
         router.push("/");
       }, 2000);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to change password");
+      setError(
+        err instanceof Error ? err.message : "Failed to change password",
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-64px)] items-center justify-center px-4">
-      <div className="w-full max-w-md rounded-lg border border-zinc-200 bg-white p-6 shadow-md dark:border-zinc-800 dark:bg-zinc-900">
-        <h1 className="mb-6 text-2xl font-bold text-zinc-900 dark:text-zinc-100">
-          Change Password
-        </h1>
+    <div className="min-h-[calc(100vh-64px)] bg-[#0A0A0F] flex items-center justify-center px-4">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-10">
+          <h1 className="text-4xl font-bold text-white mb-3 tracking-tight">
+            Change Password
+          </h1>
+          <p className="text-zinc-400">Update your Cloud Vento password</p>
+        </div>
 
-        {success && (
-          <div className="mb-4 rounded-md bg-green-50 p-3 text-sm text-green-700 dark:bg-green-900/20 dark:text-green-400">
-            Password changed successfully! Redirecting to home...
-          </div>
-        )}
+        <div className="rounded-[1.75rem] border border-[#1E1E2E] bg-[#111118]/80 p-8 shadow-xl shadow-violet-500/10">
+          {success && (
+            <div className="mb-6 rounded-2xl bg-green-500/10 border border-green-500/20 p-4 text-sm text-green-400">
+              Password changed successfully! Redirecting to home...
+            </div>
+          )}
 
-        {error && (
-          <div className="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-400">
-            {error}
-          </div>
-        )}
+          {error && (
+            <div className="mb-6 rounded-2xl bg-red-500/10 border border-red-500/20 p-4 text-sm text-red-400">
+              {error}
+            </div>
+          )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label
-              htmlFor="currentPassword"
-              className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label
+                htmlFor="currentPassword"
+                className="block text-sm font-medium text-zinc-300 mb-2"
+              >
+                Current Password
+              </label>
+              <input
+                id="currentPassword"
+                type="password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                required
+                className="w-full rounded-2xl border border-[#1E1E2E] bg-[#0D1019]/90 px-4 py-3.5 text-white placeholder-zinc-500 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500 transition-colors"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="newPassword"
+                className="block text-sm font-medium text-zinc-300 mb-2"
+              >
+                New Password
+              </label>
+              <input
+                id="newPassword"
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                required
+                className="w-full rounded-2xl border border-[#1E1E2E] bg-[#0D1019]/90 px-4 py-3.5 text-white placeholder-zinc-500 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500 transition-colors"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-zinc-300 mb-2"
+              >
+                Confirm New Password
+              </label>
+              <input
+                id="confirmPassword"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                className="w-full rounded-2xl border border-[#1E1E2E] bg-[#0D1019]/90 px-4 py-3.5 text-white placeholder-zinc-500 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500 transition-colors"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full rounded-full bg-gradient-to-r from-violet-600 to-violet-500 px-4 py-3.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 hover:from-violet-500 hover:to-violet-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.98]"
             >
-              Current Password
-            </label>
-            <input
-              id="currentPassword"
-              type="password"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              required
-              className="w-full rounded-md border border-zinc-300 px-3 py-2 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
-            />
-          </div>
+              {loading ? "Changing Password..." : "Change Password"}
+            </button>
+          </form>
 
-          <div>
-            <label
-              htmlFor="newPassword"
-              className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+          <p className="mt-8 text-center text-sm text-zinc-400">
+            Want to go back?{" "}
+            <a
+              href="/login"
+              className="font-semibold text-violet-400 hover:text-violet-300 transition-colors"
             >
-              New Password
-            </label>
-            <input
-              id="newPassword"
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              required
-              className="w-full rounded-md border border-zinc-300 px-3 py-2 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="confirmPassword"
-              className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
-            >
-              Confirm New Password
-            </label>
-            <input
-              id="confirmPassword"
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-              className="w-full rounded-md border border-zinc-300 px-3 py-2 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
-          >
-            {loading ? "Changing Password..." : "Change Password"}
-          </button>
-        </form>
+              Log in
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );
