@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 
 import "../index.css";
 import Header from "@/components/header";
+import Footer from "@/components/footer";
 import Providers from "@/components/providers";
 
 const geistSans = Geist({
@@ -33,6 +34,7 @@ export default function RootLayout({
           <div className="flex flex-col min-h-svh">
             <Header />
             <main className="flex-1 pt-16">{children}</main>
+            <Footer />
           </div>
         </Providers>
       </body>

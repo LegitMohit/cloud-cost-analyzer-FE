@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: #0A0B0E;
+  --background: #0a0b0e;
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -40,7 +40,7 @@
 }
 
 .dark {
-  --background: #0A0B0E;
+  --background: #0a0b0e;
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
@@ -121,6 +121,8 @@
   }
 
   * {
+    scroll-behavior: smooth;
+
     scrollbar-width: thin;
     scrollbar-color: rgba(148, 163, 184, 0.32) transparent;
   }
