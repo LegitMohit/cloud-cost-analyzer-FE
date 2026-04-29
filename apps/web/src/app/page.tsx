@@ -1,8 +1,14 @@
 "use client";
 
-import { Cloud, BarChart3, Lightbulb, Settings, Zap, ArrowDown } from "lucide-react";
+import { Cloud, BarChart3, Lightbulb, Settings, Zap, ArrowDown, Copy, Check } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
+
+interface JsonCopyBlockProps {
+  json: string;
+  copied: boolean;
+  onCopy: () => void;
+}
 
 const features = [
   {
@@ -31,8 +37,95 @@ const features = [
   },
 ];
 
+const JsonCopyBlock = ({ json, copied, onCopy }: JsonCopyBlockProps) => (
+  <div className="relative inline-block">
+    <button
+      onClick={onCopy}
+      className="absolute top-0 right-0 p-2 text-zinc-400 hover:text-white transition-colors z-10"
+    >
+      {copied ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
+    </button>
+    <pre className="w-[500px] bg-[#0A0A0F] border border-[#1E1E2E] rounded-lg p-4 overflow-auto max-h-[500px]">
+      <code className="text-sm text-zinc-300 font-mono whitespace-pre">{json}</code>
+    </pre>
+  </div>
+);
+
 export default function Home() {
   const [policyType, setPolicyType] = useState<"recommended" | "fullaccess">("recommended");
+  const [copied, setCopied] = useState(false);
+
+  const recommendedJson = `{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ce:GetCostAndUsage",
+        "ce:GetReservationCoverage",
+        "ce:GetSavingsPlansUtilization",
+        "ce:GetDimensionValues",
+        "ce:GetTags",
+        "ec2:DescribeInstances",
+        "ec2:DescribeVolumes",
+        "s3:ListBuckets",
+        "s3:ListObjects",
+        "rds:DescribeDBInstances"
+      ],
+      "Resource": "*"
+    }
+  ]
+}`;
+
+  const fullaccessJson = `{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "GeneralAccess",
+      "Effect": "Allow",
+      "Action": [
+        "iam:CreateRole",
+        "iam:AttachRolePolicy",
+        "iam:ListRoles",
+        "cloudwatch:*",
+        "s3:*",
+        "ec2:*",
+        "rds:*",
+        "ce:*"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "PassRoleToRDS",
+      "Effect": "Allow",
+      "Action": "iam:PassRole",
+      "Resource": "arn:aws:iam::<12-digit unique identifier>:role/rds-monitoring-role",
+      "Condition": {
+        "StringEquals": {
+          "iam:PassedToService": "monitoring.rds.amazonaws.com"
+        }
+      }
+    },
+    {
+      "Sid": "AllowServiceLinkedRole",
+      "Effect": "Allow",
+      "Action": "iam:CreateServiceLinkedRole",
+      "Resource": "arn:aws:iam::*:role/aws-service-role/rds.amazonaws.com/*",
+      "Condition": {
+        "StringLike": {
+          "iam:AWSServiceName": "rds.amazonaws.com"
+        }
+      }
+    }
+  ]
+}`;
+
+  const copyToClipboard = async () => {
+    const jsonToCopy = policyType === "recommended" ? recommendedJson : fullaccessJson;
+    await navigator.clipboard.writeText(jsonToCopy);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <div className="min-h-screen bg-[#0A0A0F] flex items-center justify-center px-4 py-12">
@@ -130,82 +223,13 @@ export default function Home() {
                     </button>
                   </div>
 
-                  {policyType === "recommended" && (
-                    <div>
-                      <pre className="w-full max-w-full bg-[#0A0A0F] border border-[#1E1E2E] rounded-lg p-4 overflow-x-auto whitespace-pre-wrap break-words">
-<code className="block w-full text-sm text-zinc-300 font-mono">{`{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ce:GetCostAndUsage",
-        "ce:GetReservationCoverage",
-        "ce:GetSavingsPlansUtilization",
-        "ce:GetDimensionValues",
-        "ce:GetTags",
-        "ec2:DescribeInstances",
-        "ec2:DescribeVolumes",
-        "s3:ListBuckets",
-        "s3:ListObjects",
-        "rds:DescribeDBInstances"
-      ],
-      "Resource": "*"
-    }
-  ]
-}`}</code>
-                      </pre>
-                    </div>
-                  )}
+                   {policyType === "recommended" && (
+                     <JsonCopyBlock json={recommendedJson} copied={copied} onCopy={copyToClipboard} />
+                   )}
 
-                  {policyType === "fullaccess" && (
-                    <div>
-                      <pre className="w-full max-w-full bg-[#0A0A0F] border border-[#1E1E2E] rounded-lg p-4 overflow-x-auto whitespace-pre-wrap break-words">
-<code className="block w-full text-sm text-zinc-300 font-mono">{`{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "GeneralAccess",
-      "Effect": "Allow",
-      "Action": [
-        "iam:CreateRole",
-        "iam:AttachRolePolicy",
-        "iam:ListRoles",
-        "cloudwatch:*",
-        "s3:*",
-        "ec2:*",
-        "rds:*",
-        "ce:*"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Sid": "PassRoleToRDS",
-      "Effect": "Allow",
-      "Action": "iam:PassRole",
-      "Resource": "arn:aws:iam::<12-digit unique identifier>:role/rds-monitoring-role",
-      "Condition": {
-        "StringEquals": {
-          "iam:PassedToService": "monitoring.rds.amazonaws.com"
-        }
-      }
-    },
-    {
-      "Sid": "AllowServiceLinkedRole",
-      "Effect": "Allow",
-      "Action": "iam:CreateServiceLinkedRole",
-      "Resource": "arn:aws:iam::*:role/aws-service-role/rds.amazonaws.com/*",
-      "Condition": {
-        "StringLike": {
-          "iam:AWSServiceName": "rds.amazonaws.com"
-        }
-      }
-    }
-  ]
-}`}</code>
-                      </pre>
-                    </div>
-                  )}
+                   {policyType === "fullaccess" && (
+                     <JsonCopyBlock json={fullaccessJson} copied={copied} onCopy={copyToClipboard} />
+                   )}
                 </div>
               </div>
             </div>
