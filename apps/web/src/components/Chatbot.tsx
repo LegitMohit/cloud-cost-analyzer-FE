@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, type JSX } from "react";
 import { chatApi, type ChatMessage, type ChatContext } from "@/lib/api";
 import { Loader2, Send, X, MessageCircle } from "lucide-react";
 
@@ -13,6 +13,30 @@ interface ChatbotProps {
     recommendations?: Recommendation[];
     costData?: CostData;
   };
+}
+
+function renderMarkdown(text: string): JSX.Element {
+  const parts: JSX.Element[] = [];
+  let remaining = text;
+  let key = 0;
+
+  while (remaining.length > 0) {
+    const boldMatch = remaining.match(/^\*\*([^*]+)\*\*/);
+    if (boldMatch) {
+      parts.push(<strong key={key++}>{boldMatch[1]}</strong>);
+      remaining = remaining.slice(boldMatch[0].length);
+    } else {
+      const char = remaining[0];
+      if (char === "\n") {
+        parts.push(<br key={key++} />);
+      } else {
+        parts.push(<span key={key++}>{char}</span>);
+      }
+      remaining = remaining.slice(1);
+    }
+  }
+
+  return <>{parts.map(p => p)}</>;
 }
 
 export default function Chatbot({ pageType, contextData }: ChatbotProps) {
@@ -120,7 +144,7 @@ export default function Chatbot({ pageType, contextData }: ChatbotProps) {
             <div className="flex-1 overflow-y-auto p-4 space-y-3">
               {messages.length === 0 ? (
                 <div className="text-center text-zinc-500 py-8">
-                  <p className="text-sm">Ask me anything about your cloud costs!</p>
+                  <p className="text-sm">Lets discuss about your cloud optimization strategies!</p>
                 </div>
               ) : (
                 messages.map((msg, idx) => (
@@ -135,7 +159,7 @@ export default function Chatbot({ pageType, contextData }: ChatbotProps) {
                           : "bg-[#1A1B26] text-zinc-200"
                       }`}
                     >
-                      {msg.content}
+                      {msg.role === "user" ? msg.content : renderMarkdown(msg.content)}
                     </div>
                   </div>
                 ))

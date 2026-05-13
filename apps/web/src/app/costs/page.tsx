@@ -114,7 +114,7 @@ export default function CostsPage() {
 
         <section className="rounded-[2rem] border border-[#1E1E2E] bg-[#0A0B10]/80 p-8 shadow-2xl shadow-violet-500/10 backdrop-blur-xl">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-            <div className="max-w-3xl">
+            <div className="">
               <div className="inline-flex items-center gap-2 rounded-full border border-violet-500/30 bg-violet-500/10 px-4 py-2 text-sm text-violet-200">
                 <DollarSign className="w-4 h-4" />
                 <span className="text-violet-300">Cost Analytics</span>
@@ -212,6 +212,13 @@ export default function CostsPage() {
         {error && (
           <div className="rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-400">
             {error}
+          </div>
+        )}
+
+        {!costData && !error && (
+          <div className="rounded-[1.75rem] border border-[#1E1E2E] bg-[#111218]/80 p-8 text-center">
+            <p className="text-zinc-400 mb-2">No cost data available.</p>
+            <p className="text-zinc-500 text-sm">Click "Fetch Costs" to analyze your AWS resources.</p>
           </div>
         )}
 
