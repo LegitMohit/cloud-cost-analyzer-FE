@@ -47,14 +47,12 @@ export default function ChangePasswordPage() {
   return (
     <div className="min-h-[calc(100vh-64px)] bg-[#0A0A0F] flex items-center justify-center px-4">
       <div className="w-full max-w-md">
-        <div className="text-center mb-10">
-          <h1 className="text-4xl font-bold text-white mb-3 tracking-tight">
-            Change Password
-          </h1>
-          <p className="text-zinc-400">Update your Cloud Vento password</p>
-        </div>
+        <div className="rounded-[1.75rem] border border-[#1E1E2E] bg-[#111218]/80 p-8 shadow-xl shadow-violet-500/10 my-10">
+          <div className="mb-8 text-center">
+            <h1 className="text-3xl font-semibold text-white tracking-tight">Change Password</h1>
+            <p className="mt-2 text-sm text-zinc-400">Update your Cloud Vento password</p>
+          </div>
 
-        <div className="rounded-[1.75rem] border border-[#1E1E2E] bg-[#111118]/80 p-8 shadow-xl shadow-violet-500/10">
           {success && (
             <div className="mb-6 rounded-2xl bg-green-500/10 border border-green-500/20 p-4 text-sm text-green-400">
               Password changed successfully! Redirecting to home...
@@ -71,7 +69,7 @@ export default function ChangePasswordPage() {
             <div>
               <label
                 htmlFor="currentPassword"
-                className="block text-sm font-medium text-zinc-300 mb-2"
+                className="block text-sm font-medium text-zinc-400 mb-2"
               >
                 Current Password
               </label>
@@ -81,14 +79,14 @@ export default function ChangePasswordPage() {
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 required
-                className="w-full rounded-2xl border border-[#1E1E2E] bg-[#0D1019]/90 px-4 py-3.5 text-white placeholder-zinc-500 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500 transition-colors"
+                className="w-full rounded-2xl border border-zinc-700 bg-[#12151F] px-4 py-3 text-white placeholder-zinc-500 focus:border-violet-500 focus:outline-none transition-colors"
               />
             </div>
 
             <div>
               <label
                 htmlFor="newPassword"
-                className="block text-sm font-medium text-zinc-300 mb-2"
+                className="block text-sm font-medium text-zinc-400 mb-2"
               >
                 New Password
               </label>
@@ -98,14 +96,14 @@ export default function ChangePasswordPage() {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 required
-                className="w-full rounded-2xl border border-[#1E1E2E] bg-[#0D1019]/90 px-4 py-3.5 text-white placeholder-zinc-500 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500 transition-colors"
+                className="w-full rounded-2xl border border-zinc-700 bg-[#12151F] px-4 py-3 text-white placeholder-zinc-500 focus:border-violet-500 focus:outline-none transition-colors"
               />
             </div>
 
             <div>
               <label
                 htmlFor="confirmPassword"
-                className="block text-sm font-medium text-zinc-300 mb-2"
+                className="block text-sm font-medium text-zinc-400 mb-2"
               >
                 Confirm New Password
               </label>
@@ -115,14 +113,14 @@ export default function ChangePasswordPage() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
-                className="w-full rounded-2xl border border-[#1E1E2E] bg-[#0D1019]/90 px-4 py-3.5 text-white placeholder-zinc-500 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500 transition-colors"
+                className="w-full rounded-2xl border border-zinc-700 bg-[#12151F] px-4 py-3 text-white placeholder-zinc-500 focus:border-violet-500 focus:outline-none transition-colors"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-full bg-gradient-to-r from-violet-600 to-violet-500 px-4 py-3.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 hover:from-violet-500 hover:to-violet-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.98]"
+              className="w-full rounded-full bg-gradient-to-r from-violet-600 to-violet-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:from-violet-500 hover:to-violet-400 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading ? "Changing Password..." : "Change Password"}
             </button>
@@ -132,7 +130,7 @@ export default function ChangePasswordPage() {
             Want to go back?{" "}
             <a
               href="/login"
-              className="font-semibold text-violet-400 hover:text-violet-300 transition-colors"
+              className="font-semibold text-violet-200 hover:text-violet-100 transition-colors"
             >
               Log in
             </a>
