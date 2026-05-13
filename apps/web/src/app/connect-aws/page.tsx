@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { awsApi } from "@/lib/api";
-import { Loader2 } from "lucide-react";
+import { Loader2, ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 const AWS_REGIONS = [
   { value: "ap-south-1", label: "Asia Pacific (Mumbai)" },
@@ -46,27 +47,27 @@ export default function ConnectAWSPage() {
 
   return (
     <div className="flex items-center justify-center p-4">
-      <div className="w-full max-w-md rounded-2xl border border-zinc-800 bg-zinc-900 p-8 shadow-xl">
+      <div className="w-full max-w-md rounded-2xl border border-[#1E1E2E] bg-[#111218]/80 p-8 shadow-xl">
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-white tracking-tight">Connect AWS</h1>
-          <p className="mt-2 text-zinc-400">Enter your AWS credentials to scan resources</p>
+          <h1 className="text-3xl font-semibold text-white tracking-tight">Connect AWS</h1>
+          <p className="mt-2 text-sm text-zinc-400">Enter your AWS credentials to scan resources</p>
         </div>
 
         {error && (
-          <div className="mb-6 rounded-lg bg-red-500/10 p-4 text-sm text-red-500 border border-red-500/20">
+          <div className="mb-6 rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-400">
             {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-zinc-300 mb-2">
+            <label className="block text-sm font-medium text-zinc-400 mb-2">
               Access Key ID
             </label>
             <input
               type="text"
               required
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-3 text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors"
+              className="w-full rounded-2xl border border-zinc-700 bg-[#12151F] px-4 py-3 text-white placeholder-zinc-500 focus:border-violet-500 focus:outline-none transition-colors"
               placeholder="AKIA..."
               value={accessKey}
               onChange={(e) => setAccessKey(e.target.value)}
@@ -74,13 +75,13 @@ export default function ConnectAWSPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-zinc-300 mb-2">
+            <label className="block text-sm font-medium text-zinc-400 mb-2">
               Secret Access Key
             </label>
             <input
               type="password"
               required
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-3 text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors"
+              className="w-full rounded-2xl border border-zinc-700 bg-[#12151F] px-4 py-3 text-white placeholder-zinc-500 focus:border-violet-500 focus:outline-none transition-colors"
               placeholder="••••••••••••••••"
               value={secretKey}
               onChange={(e) => setSecretKey(e.target.value)}
@@ -88,12 +89,12 @@ export default function ConnectAWSPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-zinc-300 mb-2">
+            <label className="block text-sm font-medium text-zinc-400 mb-2">
               AWS Region
             </label>
             <select
               required
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-3 text-white focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors"
+              className="w-full rounded-2xl border border-zinc-700 bg-[#12151F] px-4 py-3 text-white focus:border-violet-500 focus:outline-none transition-colors"
               value={region}
               onChange={(e) => setRegion(e.target.value)}
             >
@@ -108,7 +109,7 @@ export default function ConnectAWSPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+            className="w-full rounded-full bg-gradient-to-r from-violet-600 to-violet-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:from-violet-500 hover:to-violet-400 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {loading && <Loader2 className="h-4 w-4 animate-spin" />}
             {loading ? "Connecting..." : "Connect AWS Account"}
@@ -116,9 +117,9 @@ export default function ConnectAWSPage() {
         </form>
 
         <p className="mt-6 text-center text-sm text-zinc-400">
-          <a href="/" className="font-semibold text-indigo-400 hover:text-indigo-300">
+          <Link href="/aws" className="font-semibold text-violet-200 hover:text-violet-100 transition-colors">
             Back to Dashboard
-          </a>
+          </Link>
         </p>
       </div>
     </div>
