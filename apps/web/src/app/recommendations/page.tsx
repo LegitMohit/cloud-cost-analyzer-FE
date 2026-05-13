@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { awsApi, type Recommendation, type RecommendationResponse } from "@/lib/api";
 import { Loader2, Lightbulb, TrendingDown, ArrowLeft, Sparkles, TrendingUp } from "lucide-react";
 import Link from "next/link";
+import Chatbot from "@/components/Chatbot";
 
 interface ConnectedAccount {
   id: string;
@@ -237,22 +238,30 @@ export default function RecommendationsPage() {
                       ${formatToTwoDecimals(rec.estimatedSavings)}
                     </span>
                   </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
+</div>
+               ))}
+             </div>
+           </section>
+         )}
 
-        <div className="flex flex-wrap gap-3">
-          <Link
-            href="/costs"
-            className="inline-flex items-center justify-center whitespace-nowrap rounded-full border border-violet-500/20 bg-white/5 px-5 py-3 text-sm font-semibold text-violet-200 transition hover:bg-white/10"
-          >
-            <TrendingUp className="w-4 h-4 mr-2" />
-            View Cost Analysis
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
+         <div className="flex flex-wrap gap-3">
+           <Link
+             href="/costs"
+             className="inline-flex items-center justify-center whitespace-nowrap rounded-full border border-violet-500/20 bg-white/5 px-5 py-3 text-sm font-semibold text-violet-200 transition hover:bg-white/10"
+           >
+             <TrendingUp className="w-4 h-4 mr-2" />
+             View Cost Analysis
+           </Link>
+         </div>
+       </div>
+
+       <Chatbot
+         pageType="recommendations"
+         contextData={{
+           accountId: selectedAccountId,
+           recommendations: recommendations,
+         }}
+       />
+     </div>
+   );
 }

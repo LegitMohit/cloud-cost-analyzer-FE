@@ -36,6 +36,7 @@ export interface CostData {
   endDate: string;
   totalCost: number;
   serviceBreakdown: ServiceCost[];
+  awsAccountUsername?: string;
 }
 
 export interface ServiceCost {
@@ -61,106 +62,160 @@ export interface RecommendationResponse {
 }
 
 export const awsApi = {
-  connect: async (credentials: {
-    accessKey: string;
-    secretKey: string;
-    region: string;
-  }): Promise<ConnectAWSResponse> => {
-    const res = await fetchWithAuth("/aws/connect", {
-      method: "POST",
-      body: JSON.stringify(credentials),
-    });
-    const data = await res.json();
-    if (!res.ok) {
-      const errorMessage = data.error?.message || data.error || "Failed to connect AWS";
-      throw new Error(errorMessage);
-    }
-    return data;
-  },
+   connect: async (credentials: {
+     accessKey: string;
+     secretKey: string;
+     region: string;
+   }): Promise<ConnectAWSResponse> => {
+     const res = await fetchWithAuth("/aws/connect", {
+       method: "POST",
+       body: JSON.stringify(credentials),
+     });
+     const data = await res.json();
+     if (!res.ok) {
+       const errorMessage = data.error?.message || data.error || "Failed to connect AWS";
+       throw new Error(errorMessage);
+     }
+     return data;
+   },
 
-  getCostAndUsage: async (options: {
+   getCostAndUsage: async (options: {
+     accountId?: string;
+     startDate: string;
+     endDate: string;
+     granularity?: "DAILY" | "MONTHLY" | "HOURLY";
+   }): Promise<CostData> => {
+     const res = await fetchWithAuth("/aws/cost", {
+       method: "POST",
+       body: JSON.stringify(options),
+     });
+     const data = await res.json();
+     if (!res.ok) {
+       const errorMessage = data.error?.message || data.error || "Failed to get cost data";
+       throw new Error(errorMessage);
+     }
+     return data;
+   },
+
+   getConnectedAccounts: async () => {
+     const res = await fetchWithAuth("/aws/connected-accounts");
+     const data = await res.json();
+     if (!res.ok) {
+       throw new Error(data.error || "Failed to fetch connected accounts");
+     }
+     return data;
+   },
+
+   deleteAWSAccount: async (accountId: string) => {
+     const res = await fetchWithAuth(`/aws/accounts/${accountId}`, {
+       method: "DELETE",
+     });
+     const data = await res.json();
+     if (!res.ok) {
+       throw new Error(data.error || "Failed to delete AWS account");
+     }
+     return data;
+   },
+
+
+   getMonthlyForecast: async (month: string): Promise<number> => {
+     const res = await fetchWithAuth(`/aws/cost/forecast?month=${month}`, {
+       method: "GET",
+     });
+     const data = await res.json();
+     if (!res.ok) {
+       throw new Error(data.error || "Failed to get forecast");
+     }
+     return data.forecast;
+   },
+
+   generateRecommendations: async (accountId?: string) => {
+     const res = await fetchWithAuth("/aws/recommendations/generate", {
+       method: "POST",
+       body: JSON.stringify(accountId ? { accountId } : {}),
+     });
+     const data = await res.json();
+     if (!res.ok) {
+       const errorMessage = data.error?.message || data.error || "Failed to generate recommendations";
+       throw new Error(errorMessage);
+     }
+     return data;
+   },
+
+   getRecommendations: async (accountId?: string): Promise<RecommendationResponse> => {
+     const url = accountId ? `/aws/recommendations?accountId=${accountId}` : "/aws/recommendations";
+     const res = await fetchWithAuth(url);
+     const data = await res.json();
+     if (!res.ok) {
+       throw new Error(data.error || "Failed to fetch recommendations");
+     }
+     return data;
+   },
+
+   changePassword: async (currentPassword: string, newPassword: string) => {
+     const res = await fetchWithAuth("/auth/change-password", {
+       method: "POST",
+       body: JSON.stringify({ currentPassword, newPassword }),
+     });
+     const data = await res.json();
+     if (!res.ok) {
+       const errorMessage = data.error?.message || data.error || "Failed to change password";
+       throw new Error(errorMessage);
+     }
+     return data;
+   },
+ };
+
+export interface ChatMessage {
+    role: "user" | "assistant";
+    content: string;
+  }
+
+  export interface ChatContext {
+    pageType: "recommendations" | "costs";
     accountId?: string;
-    startDate: string;
-    endDate: string;
-    granularity?: "DAILY" | "MONTHLY" | "HOURLY";
-  }): Promise<CostData> => {
-    const res = await fetchWithAuth("/aws/cost", {
+    recommendations?: Recommendation[];
+    costData?: CostData;
+  }
+
+export const chatApi = {
+  sendMessage: async (message: string, context: ChatContext): Promise<string> => {
+    const res = await fetchWithAuth("/chatbot/message", {
       method: "POST",
-      body: JSON.stringify(options),
+      body: JSON.stringify({ message, context }),
     });
     const data = await res.json();
     if (!res.ok) {
-      const errorMessage = data.error?.message || data.error || "Failed to get cost data";
-      throw new Error(errorMessage);
+      throw new Error(data.error || "Failed to send message");
     }
-    return data;
+    return data.message;
   },
 
-  getConnectedAccounts: async () => {
-    const res = await fetchWithAuth("/aws/connected-accounts");
+  getHistory: async (): Promise<ChatMessage[]> => {
+    const res = await fetchWithAuth("/chatbot/history");
     const data = await res.json();
     if (!res.ok) {
-      throw new Error(data.error || "Failed to fetch connected accounts");
+      throw new Error(data.error || "Failed to get history");
     }
-    return data;
+    return data.history;
   },
 
-  deleteAWSAccount: async (accountId: string) => {
-    const res = await fetchWithAuth(`/aws/accounts/${accountId}`, {
-      method: "DELETE",
-    });
-    const data = await res.json();
-    if (!res.ok) {
-      throw new Error(data.error || "Failed to delete AWS account");
-    }
-    return data;
-  },
-
-
-  getMonthlyForecast: async (month: string): Promise<number> => {
-    const res = await fetchWithAuth(`/aws/cost/forecast?month=${month}`, {
-      method: "GET",
-    });
-    const data = await res.json();
-    if (!res.ok) {
-      throw new Error(data.error || "Failed to get forecast");
-    }
-    return data.forecast;
-  },
-
-  generateRecommendations: async (accountId?: string) => {
-    const res = await fetchWithAuth("/aws/recommendations/generate", {
+  clearHistory: async (): Promise<void> => {
+    const res = await fetchWithAuth("/chatbot/clear", {
       method: "POST",
-      body: JSON.stringify(accountId ? { accountId } : {}),
     });
     const data = await res.json();
     if (!res.ok) {
-      const errorMessage = data.error?.message || data.error || "Failed to generate recommendations";
-      throw new Error(errorMessage);
+      throw new Error(data.error || "Failed to clear history");
     }
-    return data;
   },
 
-  getRecommendations: async (accountId?: string): Promise<RecommendationResponse> => {
-    const url = accountId ? `/aws/recommendations?accountId=${accountId}` : "/aws/recommendations";
-    const res = await fetchWithAuth(url);
+  getAccounts: async (): Promise<any[]> => {
+    const res = await fetchWithAuth("/chatbot/accounts");
     const data = await res.json();
     if (!res.ok) {
-      throw new Error(data.error || "Failed to fetch recommendations");
+      throw new Error(data.error || "Failed to get accounts");
     }
-    return data;
-  },
-
-  changePassword: async (currentPassword: string, newPassword: string) => {
-    const res = await fetchWithAuth("/auth/change-password", {
-      method: "POST",
-      body: JSON.stringify({ currentPassword, newPassword }),
-    });
-    const data = await res.json();
-    if (!res.ok) {
-      const errorMessage = data.error?.message || data.error || "Failed to change password";
-      throw new Error(errorMessage);
-    }
-    return data;
+    return data.accounts;
   },
 };

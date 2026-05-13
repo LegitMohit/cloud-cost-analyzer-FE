@@ -1,15 +1,25 @@
 "use client";
 import Link from "next/link";
 
+interface FooterLink {
+  href: string;
+  label: string;
+}
+
+interface NavColumn {
+  title: string;
+  links: FooterLink[];
+}
+
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
-  const navColumns = [
+  const navColumns: NavColumn[] = [
     {
       title: "Overview",
       links: [
         { href: "/aws", label: "AWS" },
-        { href: "/cost", label: "Cost Analysis" },
+        { href: "/costs", label: "Cost Analysis" },
         { href: "/recommendations", label: "Recommendations" },
       ],
     },
@@ -58,17 +68,31 @@ export default function Footer() {
                     {column.title}
                   </h3>
                   <div className="flex flex-col gap-2">
-                    {column.links.map((link) => (
-                      <Link
-                        key={link.label}
-                        href={link.href}
-                        className="text-xs text-zinc-500 hover:text-violet-400 transition-colors"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {link.label}
-                      </Link>
-                    ))}
+                    {column.links.map((link) => {
+                      const isExternal = link.href.startsWith("http");
+                      if (isExternal) {
+                        return (
+                          <a
+                            key={link.label}
+                            href={link.href}
+                            className="text-xs text-zinc-500 hover:text-violet-400 transition-colors"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {link.label}
+                          </a>
+                        );
+                      }
+                      return (
+                        <Link
+                          key={link.label}
+                          href={link.href as any}
+                          className="text-xs text-zinc-500 hover:text-violet-400 transition-colors"
+                        >
+                          {link.label}
+                        </Link>
+                      );
+                    })}
                   </div>
                 </div>
               ))}
