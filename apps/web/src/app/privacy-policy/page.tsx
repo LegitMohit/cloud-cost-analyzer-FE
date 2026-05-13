@@ -95,7 +95,7 @@ export default function PrivacyPolicyPage() {
             <section>
               <h2 className="text-xl font-semibold text-white mb-4">9. Contact Us</h2>
               <p className="text-zinc-400 leading-relaxed">
-                If you have any questions about this Privacy Policy, please contact us at support@cloudvento.com
+                If you have any questions about this Privacy Policy, please contact us at msharma7744@gmail.com.
               </p>
             </section>
           </div>
