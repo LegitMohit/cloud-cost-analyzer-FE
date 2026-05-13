@@ -43,51 +43,48 @@ export default function Footer() {
     <footer className="bg-[#0A0A0F] border-t border-[#1E1E2E]">
       <div className="max-w-7xl mx-auto px-4">
         <div className="py-10">
-          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-8">
-            <div>
-              <h2 className="font-serif text-3xl font-normal text-white tracking-tight">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+            <Link href="/" className="inline-flex items-center gap-3">
+              <span className="font-serif text-2xl font-normal text-white tracking-tight">
                 cloud vento
-              </h2>
-            </div>
-            <p className="text-sm text-zinc-400 max-w-[260px] text-right leading-relaxed">
+              </span>
+            </Link>
+            <p className="text-sm text-zinc-400 max-w-md leading-relaxed text-right">
               Optimize your AWS spending with intelligent insights, cost breakdowns, and AI-powered recommendations
             </p>
           </div>
 
           <div className="h-px bg-[#1E1E2E] mb-8" />
 
-          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <p className="text-xs text-zinc-500">
               © {currentYear} cloud vento. All rights reserved.
             </p>
 
-            <div className="flex flex-wrap gap-8 md:gap-16">
+            <div className="flex flex-wrap gap-x-8 gap-y-4 md:gap-12">
               {navColumns.map((column) => (
                 <div key={column.title}>
-                  <h3 className="text-[13px] font-semibold text-zinc-300 mb-3">
+                  <h3 className="text-xs font-semibold text-violet-300 uppercase tracking-wider mb-3">
                     {column.title}
                   </h3>
                   <div className="flex flex-col gap-2">
                     {column.links.map((link) => {
                       const isExternal = link.href.startsWith("http");
-                      if (isExternal) {
-                        return (
-                          <a
-                            key={link.label}
-                            href={link.href}
-                            className="text-xs text-zinc-500 hover:text-violet-400 transition-colors"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {link.label}
-                          </a>
-                        );
-                      }
-                      return (
+                      return isExternal ? (
+                        <a
+                          key={link.label}
+                          href={link.href}
+                          className="text-xs text-zinc-400 hover:text-violet-200 transition-colors"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {link.label}
+                        </a>
+                      ) : (
                         <Link
                           key={link.label}
                           href={link.href as any}
-                          className="text-xs text-zinc-500 hover:text-violet-400 transition-colors"
+                          className="text-xs text-zinc-400 hover:text-violet-200 transition-colors"
                         >
                           {link.label}
                         </Link>
