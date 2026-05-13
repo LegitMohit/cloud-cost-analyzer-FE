@@ -20,6 +20,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Cloud Vento",
   description: "Cloud Vento - AI-Powered Cloud Cost Optimization",
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 export default function RootLayout({
