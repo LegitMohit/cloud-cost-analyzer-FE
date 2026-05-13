@@ -2,7 +2,13 @@
 
 import { useState, useEffect, useRef } from "react";
 import { awsApi, type CostData } from "@/lib/api";
-import { Loader2, DollarSign, Calendar, PieChart, TrendingUp, ArrowLeft } from "lucide-react";
+import {
+  Loader2,
+  DollarSign,
+  PieChart,
+  TrendingUp,
+  ArrowLeft,
+} from "lucide-react";
 import Link from "next/link";
 import Chatbot from "@/components/Chatbot";
 
@@ -16,10 +22,13 @@ interface ConnectedAccount {
 function formatToTwoDecimals(num: number) {
   const [intPart, decimalPart = ""] = num.toString().split(".");
   const trimmedDecimal = decimalPart.slice(0, 2);
-  const formatted = trimmedDecimal
-    ? `${intPart}.${trimmedDecimal}`
-    : intPart;
-  return formatted === "0.00" || formatted === "0.0" || formatted === "-0.0" || formatted === "-0.00" ? "0" : formatted;
+  const formatted = trimmedDecimal ? `${intPart}.${trimmedDecimal}` : intPart;
+  return formatted === "0.00" ||
+    formatted === "0.0" ||
+    formatted === "-0.0" ||
+    formatted === "-0.00"
+    ? "0"
+    : formatted;
 }
 
 export default function CostsPage() {
@@ -37,7 +46,9 @@ export default function CostsPage() {
   const [endDate, setEndDate] = useState(() => {
     return new Date().toISOString().split("T")[0];
   });
-  const [granularity, setGranularity] = useState<"DAILY" | "MONTHLY" | "HOURLY">("MONTHLY");
+  const [granularity, setGranularity] = useState<
+    "DAILY" | "MONTHLY" | "HOURLY"
+  >("MONTHLY");
 
   useEffect(() => {
     if (granularity === "HOURLY") {
@@ -52,9 +63,9 @@ export default function CostsPage() {
     async function fetchAccounts() {
       try {
         const response = await awsApi.getConnectedAccounts();
-        const accountsData = Array.isArray(response) 
-          ? response 
-          : (response?.accounts || []);
+        const accountsData = Array.isArray(response)
+          ? response
+          : response?.accounts || [];
         setAccounts(accountsData);
         if (accountsData.length > 0) {
           setSelectedAccountId(accountsData[0].id);
@@ -105,7 +116,7 @@ export default function CostsPage() {
     <div className="min-h-screen bg-[#0A0A0F] px-4 py-10 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl flex flex-col gap-6">
         <Link
-          href={{ pathname: "/aws" }}
+          href="/aws"
           className="inline-flex items-center gap-2 text-zinc-400 hover:text-white text-sm transition-colors w-fit"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -119,9 +130,12 @@ export default function CostsPage() {
                 <DollarSign className="w-4 h-4" />
                 <span className="text-violet-300">Cost Analytics</span>
               </div>
-              <h1 className="mt-4 text-3xl font-semibold text-white sm:text-4xl">Cost Analysis</h1>
+              <h1 className="mt-4 text-3xl font-semibold text-white sm:text-4xl">
+                Cost Analysis
+              </h1>
               <p className="mt-4 text-sm text-zinc-400 sm:text-base">
-                Analyze your AWS spending patterns, view cost breakdowns by service, and optimize your cloud expenses.
+                Analyze your AWS spending patterns, view cost breakdowns by
+                service, and optimize your cloud expenses.
               </p>
             </div>
           </div>
@@ -131,24 +145,28 @@ export default function CostsPage() {
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between mb-6">
             <div>
               <h2 className="text-2xl font-semibold text-white">Fetch Costs</h2>
-              <p className="mt-2 text-sm text-zinc-400">Select AWS account and date range to analyze costs.</p>
+              <p className="mt-2 text-sm text-zinc-400">
+                Select AWS account and date range to analyze costs.
+              </p>
             </div>
           </div>
 
           {accounts.length === 0 ? (
             <div className="mt-8 rounded-3xl border border-dashed border-zinc-800 bg-[#10121A]/80 p-8 text-center">
               <p className="text-zinc-500 mb-4">No AWS account is connected.</p>
-            <Link
-              href={{ pathname: "/connect-aws" }}
-              className="inline-flex items-center justify-center whitespace-nowrap rounded-full bg-gradient-to-r from-violet-600 to-violet-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:from-violet-500 hover:to-violet-400"
-            >
+                <Link
+                  href="/connect-aws"
+                  className="inline-flex items-center justify-center whitespace-nowrap rounded-full bg-gradient-to-r from-violet-600 to-violet-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:from-violet-500 hover:to-violet-400"
+                >
                 Connect AWS Account
               </Link>
             </div>
           ) : (
             <div className="flex flex-wrap gap-4 items-end">
               <div className="min-w-[200px]">
-                <label className="block text-sm font-medium text-zinc-400 mb-2">AWS Account</label>
+                <label className="block text-sm font-medium text-zinc-400 mb-2">
+                  AWS Account
+                </label>
                 <select
                   value={selectedAccountId}
                   onChange={(e) => setSelectedAccountId(e.target.value)}
@@ -162,7 +180,9 @@ export default function CostsPage() {
                 </select>
               </div>
               <div className="min-w-[160px]">
-                <label className="block text-sm font-medium text-zinc-400 mb-2">Start Date</label>
+                <label className="block text-sm font-medium text-zinc-400 mb-2">
+                  Start Date
+                </label>
                 <input
                   type="date"
                   value={startDate}
@@ -171,7 +191,9 @@ export default function CostsPage() {
                 />
               </div>
               <div className="min-w-[160px]">
-                <label className="block text-sm font-medium text-zinc-400 mb-2">End Date</label>
+                <label className="block text-sm font-medium text-zinc-400 mb-2">
+                  End Date
+                </label>
                 <input
                   type="date"
                   value={endDate}
@@ -180,10 +202,16 @@ export default function CostsPage() {
                 />
               </div>
               <div className="min-w-[140px]">
-                <label className="block text-sm font-medium text-zinc-400 mb-2">Granularity</label>
+                <label className="block text-sm font-medium text-zinc-400 mb-2">
+                  Granularity
+                </label>
                 <select
                   value={granularity}
-                  onChange={(e) => setGranularity(e.target.value as "DAILY" | "MONTHLY" | "HOURLY")}
+                  onChange={(e) =>
+                    setGranularity(
+                      e.target.value as "DAILY" | "MONTHLY" | "HOURLY",
+                    )
+                  }
                   className="w-full rounded-2xl border border-zinc-700 bg-[#12151F] px-4 py-3 text-white focus:border-violet-500 focus:outline-none"
                 >
                   <option value="DAILY">Daily</option>
@@ -218,7 +246,9 @@ export default function CostsPage() {
         {!costData && !error && (
           <div className="rounded-[1.75rem] border border-[#1E1E2E] bg-[#111218]/80 p-8 text-center">
             <p className="text-zinc-400 mb-2">No cost data available.</p>
-            <p className="text-zinc-500 text-sm">Click "Fetch Costs" to analyze your AWS resources.</p>
+            <p className="text-zinc-500 text-sm">
+              Click "Fetch Costs" to analyze your AWS resources.
+            </p>
           </div>
         )}
 
@@ -229,18 +259,26 @@ export default function CostsPage() {
                 <PieChart className="h-5 w-5" />
               </div>
               <div>
-                <h2 className="text-xl font-semibold text-white">Service Breakdown</h2>
-                <p className="text-sm text-zinc-400">Costs grouped by AWS service</p>
+                <h2 className="text-xl font-semibold text-white">
+                  Service Breakdown
+                </h2>
+                <p className="text-sm text-zinc-400">
+                  Costs grouped by AWS service
+                </p>
               </div>
             </div>
             <div className="mb-6 flex items-center justify-between rounded-2xl bg-violet-500/10 px-4 py-4 border border-violet-500/20">
-              <span className="text-lg font-semibold text-white">Total Cost</span>
+              <span className="text-lg font-semibold text-white">
+                Total Cost
+              </span>
               <span className="text-2xl font-bold text-green-400">
                 ${formatToTwoDecimals(costData.totalCost)}
               </span>
             </div>
             {costData.serviceBreakdown.length === 0 ? (
-              <div className="text-zinc-500 text-center py-4">No cost data available</div>
+              <div className="text-zinc-500 text-center py-4">
+                No cost data available
+              </div>
             ) : (
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {costData.serviceBreakdown.map((service, idx) => (
@@ -248,35 +286,39 @@ export default function CostsPage() {
                     key={idx}
                     className="flex items-center justify-between rounded-2xl bg-[#0F1220] px-4 py-3"
                   >
-                    <span className="text-zinc-300 font-medium truncate">{service.serviceName}</span>
+                    <span className="text-zinc-300 font-medium truncate">
+                      {service.serviceName}
+                    </span>
                     <span className="text-white font-semibold whitespace-nowrap">
                       ${formatToTwoDecimals(service.cost)}
                     </span>
                   </div>
                 ))}
-</div>
-             )}
-           </section>
-         )}
+              </div>
+            )}
+          </section>
+        )}
 
-         <div className="flex flex-wrap gap-3">
-           <Link
-             href={{ pathname: "/recommendations" }}
-             className="inline-flex items-center justify-center whitespace-nowrap rounded-full border border-violet-500/20 bg-white/5 px-5 py-3 text-sm font-semibold text-violet-200 transition hover:bg-white/10"
-           >
-             <TrendingUp className="w-4 h-4 mr-2" />
-             View Recommendations
-           </Link>
-         </div>
-       </div>
+        <div className="flex flex-wrap gap-3">
+          <Link
+            href="/recommendations"
+            className="inline-flex items-center justify-center whitespace-nowrap rounded-full border border-violet-500/20 bg-white/5 px-5 py-3 text-sm font-semibold text-violet-200 transition hover:bg-white/10"
+          >
+            <TrendingUp className="w-4 h-4 mr-2" />
+            View Recommendations
+          </Link>
+        </div>
 
-<Chatbot
-          pageType="costs"
-          contextData={{
-            accountId: selectedAccountId,
-            costData: costData ?? undefined,
-          }}
-        />
-     </div>
-   );
+        {accounts.length > 0 && (
+          <Chatbot
+            pageType="costs"
+            contextData={{
+              accountId: selectedAccountId,
+              costData: costData ?? undefined,
+            }}
+          />
+        )}
+      </div>
+    </div>
+  );
 }

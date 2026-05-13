@@ -1,8 +1,19 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { awsApi, type Recommendation, type RecommendationResponse } from "@/lib/api";
-import { Loader2, Lightbulb, TrendingDown, ArrowLeft, Sparkles, TrendingUp } from "lucide-react";
+import {
+  awsApi,
+  type Recommendation,
+  type RecommendationResponse,
+} from "@/lib/api";
+import {
+  Loader2,
+  Lightbulb,
+  TrendingDown,
+  ArrowLeft,
+  Sparkles,
+  TrendingUp,
+} from "lucide-react";
 import Link from "next/link";
 import Chatbot from "@/components/Chatbot";
 
@@ -16,10 +27,13 @@ interface ConnectedAccount {
 function formatToTwoDecimals(num: number) {
   const [intPart, decimalPart = ""] = num.toString().split(".");
   const trimmedDecimal = decimalPart.slice(0, 2);
-  const formatted = trimmedDecimal
-    ? `${intPart}.${trimmedDecimal}`
-    : intPart;
-  return formatted === "0.00" || formatted === "0.0" || formatted === "-0.0" || formatted === "-0.00" ? "0" : formatted;
+  const formatted = trimmedDecimal ? `${intPart}.${trimmedDecimal}` : intPart;
+  return formatted === "0.00" ||
+    formatted === "0.0" ||
+    formatted === "-0.0" ||
+    formatted === "-0.00"
+    ? "0"
+    : formatted;
 }
 
 export default function RecommendationsPage() {
@@ -44,7 +58,7 @@ export default function RecommendationsPage() {
   const fetchAccounts = async () => {
     try {
       const data = await awsApi.getConnectedAccounts();
-      const accountsData = Array.isArray(data) ? data : (data?.accounts || []);
+      const accountsData = Array.isArray(data) ? data : data?.accounts || [];
       setAccounts(accountsData);
       if (accountsData.length > 0) {
         setSelectedAccountId(accountsData[0].id);
@@ -101,7 +115,7 @@ export default function RecommendationsPage() {
     <div className="min-h-screen bg-[#0A0A0F] px-4 py-10 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl flex flex-col gap-6">
         <Link
-          href={{ pathname: "/aws" }}
+          href="/aws"
           className="inline-flex items-center gap-2 text-zinc-400 hover:text-white text-sm transition-colors w-fit"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -115,9 +129,12 @@ export default function RecommendationsPage() {
                 <Lightbulb className="w-4 h-4" />
                 <span className="text-violet-300">Cost Optimization</span>
               </div>
-              <h1 className="mt-4 text-3xl font-semibold text-white sm:text-4xl">AWS Recommendations</h1>
+              <h1 className="mt-4 text-3xl font-semibold text-white sm:text-4xl">
+                AWS Recommendations
+              </h1>
               <p className="mt-4 text-sm text-zinc-400 sm:text-base">
-                Analyze your AWS resources and get AI-powered cost optimization recommendations to reduce your cloud spending.
+                Analyze your AWS resources and get AI-powered cost optimization
+                recommendations to reduce your cloud spending.
               </p>
             </div>
           </div>
@@ -126,8 +143,12 @@ export default function RecommendationsPage() {
         <section className="rounded-[1.75rem] border border-[#1E1E2E] bg-[#111218]/80 p-6 shadow-xl shadow-black/20">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between mb-6">
             <div>
-              <h2 className="text-2xl font-semibold text-white">Generate Recommendations</h2>
-              <p className="mt-2 text-sm text-zinc-400">Select an AWS account to analyze resources.</p>
+              <h2 className="text-2xl font-semibold text-white">
+                Generate Recommendations
+              </h2>
+              <p className="mt-2 text-sm text-zinc-400">
+                Select an AWS account to analyze resources.
+              </p>
             </div>
           </div>
 
@@ -135,7 +156,7 @@ export default function RecommendationsPage() {
             <div className="mt-8 rounded-3xl border border-dashed border-zinc-800 bg-[#10121A]/80 p-8 text-center">
               <p className="text-zinc-500 mb-4">No AWS account is connected.</p>
               <Link
-                href={{ pathname: "/connect-aws" }}
+                href="/connect-aws"
                 className="inline-flex items-center justify-center whitespace-nowrap rounded-full bg-gradient-to-r from-violet-600 to-violet-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:from-violet-500 hover:to-violet-400"
               >
                 Connect AWS Account
@@ -144,7 +165,9 @@ export default function RecommendationsPage() {
           ) : (
             <div className="flex flex-wrap gap-4 items-end">
               <div className="min-w-[200px] flex-1 max-w-[300px]">
-                <label className="block text-sm font-medium text-zinc-400 mb-2">AWS Account</label>
+                <label className="block text-sm font-medium text-zinc-400 mb-2">
+                  AWS Account
+                </label>
                 <select
                   value={selectedAccountId}
                   onChange={(e) => setSelectedAccountId(e.target.value)}
@@ -191,7 +214,9 @@ export default function RecommendationsPage() {
         ) : recommendations.length === 0 ? (
           <div className="rounded-[1.75rem] border border-[#1E1E2E] bg-[#111218]/80 p-8 text-center">
             <p className="text-zinc-400 mb-2">No recommendations yet.</p>
-            <p className="text-zinc-500 text-sm">Click "Generate Recommendations" to analyze your AWS resources.</p>
+            <p className="text-zinc-500 text-sm">
+              Click "Generate Recommendations" to analyze your AWS resources.
+            </p>
           </div>
         ) : (
           <section className="rounded-[1.75rem] border border-[#1E1E2E] bg-[#111218]/80 p-6 shadow-xl shadow-black/20">
@@ -200,12 +225,18 @@ export default function RecommendationsPage() {
                 <TrendingDown className="h-5 w-5" />
               </div>
               <div>
-                <h2 className="text-xl font-semibold text-white">Optimization Results</h2>
-                <p className="text-sm text-zinc-400">{recommendations.length} recommendations found</p>
+                <h2 className="text-xl font-semibold text-white">
+                  Optimization Results
+                </h2>
+                <p className="text-sm text-zinc-400">
+                  {recommendations.length} recommendations found
+                </p>
               </div>
             </div>
             <div className="mb-6 flex items-center justify-between rounded-2xl bg-emerald-500/10 px-4 py-4 border border-emerald-500/20">
-              <span className="text-lg font-semibold text-white">Total Potential Savings</span>
+              <span className="text-lg font-semibold text-white">
+                Total Potential Savings
+              </span>
               <span className="text-2xl font-bold text-emerald-400">
                 ${formatToTwoDecimals(totalSavings)}/month
               </span>
@@ -227,7 +258,9 @@ export default function RecommendationsPage() {
                       </span>
                     </div>
                     <p className="text-white font-medium mb-2">{rec.issue}</p>
-                    <p className="text-zinc-400 text-sm">{rec.recommendation}</p>
+                    <p className="text-zinc-400 text-sm">
+                      {rec.recommendation}
+                    </p>
                     <p className="text-zinc-600 text-xs mt-3 font-mono">
                       {rec.resourceIdentifier}
                     </p>
@@ -238,30 +271,32 @@ export default function RecommendationsPage() {
                       ${formatToTwoDecimals(rec.estimatedSavings)}
                     </span>
                   </div>
-</div>
-               ))}
-             </div>
-           </section>
-         )}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
-         <div className="flex flex-wrap gap-3">
-           <Link
-             href="/costs"
-             className="inline-flex items-center justify-center whitespace-nowrap rounded-full border border-violet-500/20 bg-white/5 px-5 py-3 text-sm font-semibold text-violet-200 transition hover:bg-white/10"
-           >
-             <TrendingUp className="w-4 h-4 mr-2" />
-             View Cost Analysis
-           </Link>
-         </div>
-       </div>
+        <div className="flex flex-wrap gap-3">
+          <Link
+            href="/costs"
+            className="inline-flex items-center justify-center whitespace-nowrap rounded-full border border-violet-500/20 bg-white/5 px-5 py-3 text-sm font-semibold text-violet-200 transition hover:bg-white/10"
+          >
+            <TrendingUp className="w-4 h-4 mr-2" />
+            View Cost Analysis
+          </Link>
+        </div>
 
-       <Chatbot
-         pageType="recommendations"
-         contextData={{
-           accountId: selectedAccountId,
-           recommendations: recommendations,
-         }}
-       />
-     </div>
-   );
+        {accounts.length > 0 && (
+          <Chatbot
+            pageType="recommendations"
+            contextData={{
+              accountId: selectedAccountId,
+              recommendations: recommendations,
+            }}
+          />
+        )}
+      </div>
+    </div>
+  );
 }
