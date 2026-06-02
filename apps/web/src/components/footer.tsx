@@ -43,13 +43,13 @@ export default function Footer() {
     <footer className="bg-[#0A0A0F] border-t border-[#1E1E2E]">
       <div className="max-w-7xl mx-auto px-4">
         <div className="py-10">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+          <div className="flex flex-col items-center text-center gap-4 mb-8">
             <Link href="/" className="inline-flex items-center gap-3">
               <span className="font-serif text-2xl font-normal text-white tracking-tight">
                 cloud vento
               </span>
             </Link>
-            <p className="text-sm text-zinc-400 max-w-md leading-relaxed text-right">
+            <p className="text-sm text-zinc-400 max-w-md leading-relaxed">
               Optimize your AWS spending with intelligent insights, cost breakdowns, and AI-powered recommendations
             </p>
           </div>
@@ -62,7 +62,7 @@ export default function Footer() {
             </p>
 
             <div className="flex flex-wrap gap-x-8 gap-y-4 md:gap-12">
-              {navColumns.map((column) => (
+              {navColumns.filter(col => col.title !== "Contact").map((column) => (
                 <div key={column.title}>
                   <h3 className="text-xs font-semibold text-violet-300 uppercase tracking-wider mb-3">
                     {column.title}
@@ -93,6 +93,24 @@ export default function Footer() {
                   </div>
                 </div>
               ))}
+              <div className="md:ml-auto">
+                <h3 className="text-xs font-semibold text-violet-300 uppercase tracking-wider mb-3">
+                  Contact
+                </h3>
+                <div className="flex flex-col gap-2">
+                  {navColumns.find(col => col.title === "Contact")?.links.map((link) => (
+                    <a
+                      key={link.label}
+                      href={link.href}
+                      className="text-xs text-zinc-400 hover:text-violet-200 transition-colors"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {link.label}
+                    </a>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
