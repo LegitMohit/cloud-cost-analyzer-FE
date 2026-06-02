@@ -38,16 +38,14 @@ const features = [
 ];
 
 const JsonCopyBlock = ({ json, copied, onCopy }: JsonCopyBlockProps) => (
-  <div className="relative inline-block">
+  <div className="relative w-full max-w-full">
     <button
       onClick={onCopy}
       className="absolute top-0 right-0 p-2 text-zinc-400 hover:text-white transition-colors z-10"
     >
       {copied ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
     </button>
-    <pre className="w-[500px] bg-[#0A0A0F] border border-[#1E1E2E] rounded-lg p-4 overflow-auto max-h-[500px]">
-      <code className="text-sm text-zinc-300 font-mono whitespace-pre">{json}</code>
-    </pre>
+    <pre className="w-full max-w-full bg-[#0A0A0F] border border-[#1E1E2E] rounded-lg p-4 overflow-auto max-h-[300px]"><code className="text-sm text-zinc-300 font-mono block whitespace-pre">{json}</code></pre>
   </div>
 );
 
@@ -182,7 +180,7 @@ export default function Home() {
             <div className="bg-[#111118] border border-[#1E1E2E] rounded-xl p-6">
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0 w-8 h-8 rounded-full bg-violet-500/20 text-violet-400 flex items-center justify-center font-semibold">1</div>
-                <div>
+                <div className="min-w-0 flex-1">
                   <h3 className="text-lg font-semibold text-white mb-2">Use IAM Role-Based Access (Recommended)</h3>
                   <p className="text-zinc-400 text-sm">
                     IAM role-based access is the preferred method as it provides better security with temporary credentials and follows AWS best practices. Create an IAM role with the required permissions instead of using long-term access keys.
@@ -194,13 +192,13 @@ export default function Home() {
             <div className="bg-[#111118] border border-[#1E1E2E] rounded-xl p-6">
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0 w-8 h-8 rounded-full bg-violet-500/20 text-violet-400 flex items-center justify-center font-semibold">2</div>
-                <div>
+                <div className="min-w-0 flex-1 overflow-hidden">
                   <h3 className="text-lg font-semibold text-white mb-2">Attach User Policy via Root Account</h3>
                   <p className="text-zinc-400 text-sm mb-4">
                     If using IAM users, attach the following policy to your IAM user from the root account:
                   </p>
                   
-                  <div className="flex gap-2 mb-4">
+                  <div className="flex flex-wrap gap-2 mb-4">
                     <button
                       onClick={() => setPolicyType("recommended")}
                       className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
@@ -237,7 +235,7 @@ export default function Home() {
             <div className="bg-[#111118] border border-[#1E1E2E] rounded-xl p-6">
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0 w-8 h-8 rounded-full bg-violet-500/20 text-violet-400 flex items-center justify-center font-semibold">3</div>
-                <div>
+                <div className="min-w-0 flex-1">
                   <h3 className="text-lg font-semibold text-white mb-2">Enable Cloud Cost Explorer for IAM User</h3>
                   <p className="text-zinc-400 text-sm">
                     Go to AWS Console → Cost Explorer → Enable it if not already active. Without Cloud Cost Explorer enabled, you won't be able to retrieve cost and usage data programmatically. Make sure the IAM user has the necessary permissions to access Cost Explorer data.
@@ -249,7 +247,7 @@ export default function Home() {
             <div className="bg-[#111118] border border-[#1E1E2E] rounded-xl p-6">
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0 w-8 h-8 rounded-full bg-violet-500/20 text-violet-400 flex items-center justify-center font-semibold">4</div>
-                <div>
+                <div className="min-w-0 flex-1">
                   <h3 className="text-lg font-semibold text-white mb-2">Enable Hourly Granularity</h3>
                   <p className="text-zinc-400 text-sm">
                     In AWS Console → Billing → Preferences → Enable "Receive hourly granularity" for detailed cost data. This allows Cloud Vento to provide accurate, real-time cost analysis with hourly breakdown instead of daily summaries. Note: This may incur additional costs depending on your AWS setup.
