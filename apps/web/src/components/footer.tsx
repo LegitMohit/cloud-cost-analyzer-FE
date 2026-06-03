@@ -61,7 +61,7 @@ export default function Footer() {
               © {currentYear} cloud vento. All rights reserved.
             </p>
 
-            <div className="flex flex-wrap gap-x-8 gap-y-4 md:gap-12">
+            <div className="flex flex-wrap gap-x-8 gap-y-4 md:gap-12 justify-between md:justify-start">
               {navColumns.filter(col => col.title !== "Contact").map((column) => (
                 <div key={column.title}>
                   <h3 className="text-xs font-semibold text-violet-300 uppercase tracking-wider mb-3">
@@ -93,7 +93,7 @@ export default function Footer() {
                   </div>
                 </div>
               ))}
-              <div className="md:ml-auto">
+              <div className="md:ml-auto text-right">
                 <h3 className="text-xs font-semibold text-violet-300 uppercase tracking-wider mb-3">
                   Contact
                 </h3>
