@@ -7,7 +7,7 @@ function getAuthToken(): string | null {
     return null;
 }
 
-async function fetchWithAuth(url: string, options: RequestInit = {}) {
+async function fetchWithAuth(url: string, options: RequestInit = {}): Promise<Response> {
     const token = getAuthToken();
     const headers = new Headers({
         "Content-Type": "application/json",
@@ -16,7 +16,9 @@ async function fetchWithAuth(url: string, options: RequestInit = {}) {
     if (token) {
         headers.set("Authorization", `Bearer ${token}`);
     }
-    const response = await fetch(`${API_URL}${url}`, {
+    // Handle both full URLs and path-only URLs
+    const fullUrl = url.startsWith("http") ? url : `${API_URL}${url}`;
+    const response = await fetch(fullUrl, {
         ...options,
         headers,
     });
