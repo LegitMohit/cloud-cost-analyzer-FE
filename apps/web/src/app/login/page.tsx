@@ -34,7 +34,6 @@ function LoginForm() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ email, password }),
-                credentials: "include",
             });
 
             const data = await res.json();
@@ -43,6 +42,7 @@ function LoginForm() {
                 throw new Error(data.error || "Invalid login credentials");
             }
 
+            localStorage.setItem("token", data.token);
             window.location.href = redirectTo;
         } catch (err: any) {
             setError(err.message);

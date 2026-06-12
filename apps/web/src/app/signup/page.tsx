@@ -24,7 +24,6 @@ function SignupForm() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ email, password }),
-                credentials: "include",
             });
 
             const data = await res.json();
@@ -33,6 +32,7 @@ function SignupForm() {
                 throw new Error(data.error || "Something went wrong");
             }
 
+            localStorage.setItem("token", data.token);
             const redirectParam = redirectTo !== "/" ? `&redirect=${encodeURIComponent(redirectTo)}` : "";
             router.push(`/login?registered=true${redirectParam}`);
         } catch (err: any) {

@@ -36,10 +36,9 @@ export function ProfileMenu() {
     }
   }, [open]);
 
-  const handleLogout = async () => {
-    await logout();
+  const handleLogout = () => {
+    logout();
     setOpen(false);
-    router.push("/");
   };
 
   const handleLogin = () => {

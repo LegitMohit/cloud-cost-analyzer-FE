@@ -16,16 +16,18 @@ interface User {
 interface UserContextType {
   user: User | null;
   loading: boolean;
-  logout: () => Promise<void>;
+  logout: () => void;
   refreshUser: () => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType>({
   user: null,
   loading: true,
-  logout: async () => {},
+  logout: () => {},
   refreshUser: async () => {},
 });
+
+const publicPaths = ["/login", "/signup", "/"];
 
 export function useUser() {
   return useContext(UserContext);
@@ -37,38 +39,40 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   const refreshUser = useCallback(async () => {
     try {
+      const token = localStorage.getItem("token");
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
-        credentials: "include",
+        headers: {
+          Authorization: token ? `Bearer ${token}` : "",
+        },
       });
       if (res.ok) {
         const data = await res.json();
         setUser(data.user);
       } else {
         setUser(null);
+        localStorage.removeItem("token");
       }
     } catch {
       setUser(null);
+      localStorage.removeItem("token");
     } finally {
       setLoading(false);
     }
   }, []);
 
-  const logout = useCallback(async () => {
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
-        method: "POST",
-        credentials: "include",
-      });
-      if (res.ok) {
-        setUser(null);
-        toast.success("Logged out successfully");
-      }
-    } catch {
-      toast.error("Failed to logout");
-    }
+  const logout = useCallback(() => {
+    localStorage.removeItem("token");
+    setUser(null);
+    toast.success("Logged out successfully");
+    window.location.href = "/login";
   }, []);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token && !publicPaths.includes(window.location.pathname)) {
+      window.location.href = `/login?redirect=${encodeURIComponent(window.location.pathname)}`;
+      return;
+    }
     refreshUser();
   }, [refreshUser]);
 

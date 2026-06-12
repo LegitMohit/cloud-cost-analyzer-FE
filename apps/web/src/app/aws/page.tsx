@@ -22,6 +22,25 @@ interface AWSAccount {
   status: string;
 }
 
+function getAuthToken(): string | null {
+  if (typeof window !== "undefined") {
+    return localStorage.getItem("token");
+  }
+  return null;
+}
+
+function fetchWithAuth(url: string, options: RequestInit = {}): Promise<Response> {
+  const token = getAuthToken();
+  const headers = new Headers({
+    "Content-Type": "application/json",
+    ...options.headers,
+  });
+  if (token) {
+    headers.set("Authorization", `Bearer ${token}`);
+  }
+  return fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, { ...options, headers });
+}
+
 function BucketIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
@@ -101,7 +120,7 @@ export default function Home() {
     async function fetchData() {
       try {
         const [resourcesRes, accountsRes] = await Promise.all([
-          fetch(`${process.env.NEXT_PUBLIC_API_URL}/aws/resources`, { credentials: "include" }),
+          fetchWithAuth(`${process.env.NEXT_PUBLIC_API_URL}/aws/resources`),
           awsApi.getConnectedAccounts(),
         ]);
         if (resourcesRes.ok) {
@@ -142,7 +161,7 @@ export default function Home() {
       setReconnectModal({ open: false, account: null });
       setSecretKey("");
       const [resourcesRes, accountsRes] = await Promise.all([
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/aws/resources`, { credentials: "include" }),
+        fetchWithAuth(`${process.env.NEXT_PUBLIC_API_URL}/aws/resources`),
         awsApi.getConnectedAccounts(),
       ]);
       if (resourcesRes.ok) {
@@ -166,7 +185,7 @@ export default function Home() {
       await awsApi.deleteAWSAccount(accountId);
       setAccounts(accounts.filter((a) => a.id !== accountId));
       const [resourcesRes] = await Promise.all([
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/aws/resources`, { credentials: "include" }),
+        fetchWithAuth(`${process.env.NEXT_PUBLIC_API_URL}/aws/resources`),
       ]);
       if (resourcesRes.ok) {
         const data = await resourcesRes.json();

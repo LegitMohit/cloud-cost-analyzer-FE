@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 const publicPaths = ["/login", "/signup", "/"];
-const API_URL = process.env.NEXT_PUBLIC_API_URL!;
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -13,25 +12,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  try {
-    const res = await fetch(`${API_URL}/auth/me`, {
-      credentials: "include",
-      headers: {
-        cookie: request.headers.get("cookie") || "",
-      },
-    });
-
-    if (!res.ok) {
-      const loginUrl = new URL("/login", request.url);
-      loginUrl.searchParams.set("redirect", pathname);
-      return NextResponse.redirect(loginUrl);
-    }
-  } catch {
-    const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("redirect", pathname);
-    return NextResponse.redirect(loginUrl);
-  }
-
+  // Token-based auth is handled client-side via localStorage
+  // Let the request pass through; client-side auth will redirect if needed
   return NextResponse.next();
 }
 
