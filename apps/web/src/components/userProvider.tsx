@@ -108,7 +108,12 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    refreshUser();
+    // Only call /me on protected paths with a token
+    if (isProtectedPath(pathname) && token) {
+      refreshUser();
+    } else {
+      setLoading(false);
+    }
   }, [pathname, refreshUser]);
 
   useEffect(() => {

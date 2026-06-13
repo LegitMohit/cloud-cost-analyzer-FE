@@ -38,13 +38,14 @@ export default function Header() {
           </Link>
             <nav className="hidden md:flex items-center gap-5">
                 {quickLinks.map((link) => (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  className="text-sm text-zinc-400 hover:text-white transition-colors"
-                >
-                  {link.label}
-                </Link>
+<Link
+                   key={link.label}
+                   href={link.href}
+                   prefetch={false}
+                   className="text-sm text-zinc-400 hover:text-white transition-colors"
+                 >
+                   {link.label}
+                 </Link>
               ))}
             </nav>
           </div>
@@ -79,14 +80,15 @@ export default function Header() {
                               link.label.toLowerCase().includes(searchQuery.toLowerCase())
                             )
                             .map((link) => (
-                              <Link
+<Link
                                 key={link.label}
                                 href={link.href}
+                                prefetch={false}
                                 onClick={() => setSearchOpen(false)}
                                 className="block px-2 py-1.5 text-sm text-zinc-300 hover:bg-white/5 rounded-md hover:text-white transition-colors"
-                              >
-                                {link.label}
-                              </Link>
+                                >
+                                  {link.label}
+                                </Link>
                             ))}
                           {quickLinks.filter((link) =>
                             link.label.toLowerCase().includes(searchQuery.toLowerCase())

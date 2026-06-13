@@ -81,13 +81,14 @@ export default function Footer() {
                           {link.label}
                         </a>
                       ) : (
-                        <Link
-                          key={link.label}
-                          href={link.href as any}
-                          className="text-xs text-zinc-400 hover:text-violet-200 transition-colors"
-                        >
-                          {link.label}
-                        </Link>
+<Link
+                           key={link.label}
+                           href={link.href as any}
+                           prefetch={false}
+                           className="text-xs text-zinc-400 hover:text-violet-200 transition-colors"
+                         >
+                           {link.label}
+                         </Link>
                       );
                     })}
                   </div>
