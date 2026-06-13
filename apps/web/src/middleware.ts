@@ -2,19 +2,26 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 const publicPaths = ["/login", "/signup", "/"];
+const protectedPaths = ["/aws", "/costs", "/recommendations"];
+
+const isPublicPath = (pathname: string) => publicPaths.some((path) => pathname === path);
+const isProtectedPath = (pathname: string) =>
+  protectedPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`));
 
 export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname, search } = request.nextUrl;
 
-  const isPublicPath = publicPaths.some((path) => pathname === path);
-
-  if (isPublicPath) {
+  if (isPublicPath(pathname) || !isProtectedPath(pathname)) {
     return NextResponse.next();
   }
 
-  // Token-based auth is handled client-side via localStorage
-  // Let the request pass through; client-side auth will redirect if needed
-  return NextResponse.next();
+  if (request.cookies.has("token")) {
+    return NextResponse.next();
+  }
+
+  const loginUrl = new URL("/login", request.url);
+  loginUrl.searchParams.set("redirect", `${pathname}${search}`);
+  return NextResponse.redirect(loginUrl);
 }
 
 export const config = {

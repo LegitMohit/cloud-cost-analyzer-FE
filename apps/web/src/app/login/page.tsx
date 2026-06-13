@@ -4,6 +4,10 @@ import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useUser } from "@/components/userProvider";
 
+const setAuthCookie = (token: string) => {
+    document.cookie = `token=${encodeURIComponent(token)}; path=/; SameSite=Lax`;
+};
+
 function LoginForm() {
     const searchParams = useSearchParams();
     const { user, loading: authLoading } = useUser();
@@ -51,6 +55,7 @@ function LoginForm() {
             }
 
             localStorage.setItem("token", data.token);
+            setAuthCookie(data.token);
             window.location.href = redirectTo;
         } catch (err: any) {
             setError(err.message);

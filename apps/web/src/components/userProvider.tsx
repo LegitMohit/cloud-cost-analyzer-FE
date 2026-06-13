@@ -38,6 +38,14 @@ const protectedPaths = [
 const isProtectedPath = (pathname: string) =>
   protectedPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`));
 
+const setAuthCookie = (token: string) => {
+  document.cookie = `token=${encodeURIComponent(token)}; path=/; SameSite=Lax`;
+};
+
+const clearAuthCookie = () => {
+  document.cookie = "token=; path=/; SameSite=Lax; Max-Age=0";
+};
+
 export function useUser() {
   return useContext(UserContext);
 }
@@ -50,6 +58,9 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const refreshUser = useCallback(async () => {
     try {
       const token = localStorage.getItem("token");
+      if (token) {
+        setAuthCookie(token);
+      }
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
         headers: {
           Authorization: token ? `Bearer ${token}` : "",
@@ -76,9 +87,12 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   const logout = useCallback(() => {
     localStorage.removeItem("token");
+    clearAuthCookie();
     setUser(null);
     toast.success("Logged out successfully");
-    window.location.href = "/login";
+
+    const currentLocation = `${window.location.pathname}${window.location.search}`;
+    window.location.href = `/login?redirect=${encodeURIComponent(currentLocation)}`;
   }, []);
 
   useEffect(() => {

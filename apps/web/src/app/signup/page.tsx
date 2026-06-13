@@ -3,6 +3,10 @@
 import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
+const setAuthCookie = (token: string) => {
+    document.cookie = `token=${encodeURIComponent(token)}; path=/; SameSite=Lax`;
+};
+
 function SignupForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -33,6 +37,7 @@ function SignupForm() {
             }
 
             localStorage.setItem("token", data.token);
+            setAuthCookie(data.token);
             const redirectParam = redirectTo !== "/" ? `&redirect=${encodeURIComponent(redirectTo)}` : "";
             router.push(`/login?registered=true${redirectParam}`);
         } catch (err: any) {
