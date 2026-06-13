@@ -1,13 +1,15 @@
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useUser } from "@/components/userProvider";
 
 function LoginForm() {
-    const router = useRouter();
     const searchParams = useSearchParams();
-    const registered = searchParams.get("registered");
-    const redirectTo = searchParams.get("redirect") || "/";
+    const { user, loading: authLoading } = useUser();
+    const registered = searchParams?.get("registered");
+    const redirectParam = searchParams?.get("redirect") || "/";
+    const redirectTo = redirectParam.startsWith("/") && !redirectParam.startsWith("//") ? redirectParam : "/";
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -20,6 +22,12 @@ function LoginForm() {
             setMessage("Registration successful! You can now log in.");
         }
     }, [registered]);
+
+    useEffect(() => {
+        if (!authLoading && user) {
+            window.location.href = redirectTo;
+        }
+    }, [authLoading, user, redirectTo]);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();

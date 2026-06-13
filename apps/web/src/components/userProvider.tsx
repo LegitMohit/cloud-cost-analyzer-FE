@@ -27,7 +27,16 @@ const UserContext = createContext<UserContextType>({
   refreshUser: async () => {},
 });
 
-const publicPaths = ["/login", "/signup", "/"];
+const protectedPaths = [
+  "/aws",
+  "/costs",
+  "/recommendations",
+  "/connect-aws",
+  "/change-password",
+];
+
+const isProtectedPath = (pathname: string) =>
+  protectedPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`));
 
 export function useUser() {
   return useContext(UserContext);
@@ -36,6 +45,7 @@ export function useUser() {
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [pathname, setPathname] = useState<string | null>(null);
 
   const refreshUser = useCallback(async () => {
     try {
@@ -60,6 +70,10 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  useEffect(() => {
+    setPathname(window.location.pathname);
+  }, []);
+
   const logout = useCallback(() => {
     localStorage.removeItem("token");
     setUser(null);
@@ -68,17 +82,36 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token && !publicPaths.includes(window.location.pathname)) {
-      window.location.href = `/login?redirect=${encodeURIComponent(window.location.pathname)}`;
+    if (!pathname) {
       return;
     }
+
+    const token = localStorage.getItem("token");
+    const currentLocation = `${pathname}${window.location.search}`;
+
+    if (isProtectedPath(pathname) && !token) {
+      window.location.href = `/login?redirect=${encodeURIComponent(currentLocation)}`;
+      return;
+    }
+
     refreshUser();
-  }, [refreshUser]);
+  }, [pathname, refreshUser]);
+
+  useEffect(() => {
+    if (!pathname || !loading || !isProtectedPath(pathname) || user) {
+      return;
+    }
+
+    const currentLocation = `${pathname}${window.location.search}`;
+    window.location.href = `/login?redirect=${encodeURIComponent(currentLocation)}`;
+  }, [loading, pathname, user]);
+
+  const isProtected = pathname ? isProtectedPath(pathname) : true;
+  const shouldRenderChildren = !isProtected || (!loading && !!user);
 
   return (
     <UserContext.Provider value={{ user, loading, logout, refreshUser }}>
-      {children}
+      {shouldRenderChildren ? children : null}
     </UserContext.Provider>
   );
 }
