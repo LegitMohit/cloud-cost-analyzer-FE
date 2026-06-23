@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+import { env } from "@cloud_cost_analyzer/env/web";
+
 const publicPaths = ["/login", "/signup", "/"];
-const API_URL = process.env.NEXT_PUBLIC_API_URL!;
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -14,8 +15,7 @@ export async function middleware(request: NextRequest) {
   }
 
   try {
-    const res = await fetch(`${API_URL}/auth/me`, {
-      credentials: "include",
+    const res = await fetch(`${env.NEXT_PUBLIC_API_URL}/auth/me`, {
       headers: {
         cookie: request.headers.get("cookie") || "",
       },

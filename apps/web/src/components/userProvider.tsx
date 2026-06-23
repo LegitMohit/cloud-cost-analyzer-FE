@@ -37,7 +37,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   const refreshUser = useCallback(async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
+      const res = await fetch(`/api/auth/me`, {
         credentials: "include",
       });
       if (res.ok) {
@@ -55,7 +55,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   const logout = useCallback(async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
+      const res = await fetch(`/api/auth/logout`, {
         method: "POST",
         credentials: "include",
       });
