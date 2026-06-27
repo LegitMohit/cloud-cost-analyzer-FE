@@ -9,8 +9,9 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const isPublicPath = publicPaths.some((path) => pathname === path);
+  const isApiRoute = pathname.startsWith("/api/");
 
-  if (isPublicPath) {
+  if (isPublicPath || isApiRoute) {
     return NextResponse.next();
   }
 
