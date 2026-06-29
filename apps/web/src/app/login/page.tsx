@@ -7,7 +7,7 @@ function LoginForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const registered = searchParams.get("registered");
-    const redirectTo = searchParams.get("redirect") || "/";
+    const redirectTo = searchParams.get("redirect") || "/aws";
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
