@@ -117,7 +117,7 @@ export default function ConnectAWSPage() {
         </form>
 
         <p className="mt-6 text-center text-sm text-zinc-400">
-          <Link href="/aws" className="font-semibold text-violet-200 hover:text-violet-100 transition-colors">
+          <Link href="/aws" prefetch={false} className="font-semibold text-violet-200 hover:text-violet-100 transition-colors">
             Back to Dashboard
           </Link>
         </p>

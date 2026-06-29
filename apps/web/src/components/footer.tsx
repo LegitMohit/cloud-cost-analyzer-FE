@@ -80,10 +80,11 @@ export default function Footer() {
                         >
                           {link.label}
                         </a>
-                      ) : (
+                        ) : (
                         <Link
                           key={link.label}
                           href={link.href as any}
+                          prefetch={link.href === "/terms" || link.href === "/privacy-policy" ? undefined : false}
                           className="text-xs text-zinc-400 hover:text-violet-200 transition-colors"
                         >
                           {link.label}

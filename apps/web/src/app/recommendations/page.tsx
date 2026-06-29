@@ -116,6 +116,7 @@ export default function RecommendationsPage() {
       <div className="mx-auto max-w-7xl flex flex-col gap-6">
         <Link
           href="/aws"
+          prefetch={false}
           className="inline-flex items-center gap-2 text-zinc-400 hover:text-white text-sm transition-colors w-fit"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -155,12 +156,13 @@ export default function RecommendationsPage() {
           {accounts.length === 0 ? (
             <div className="mt-8 rounded-3xl border border-dashed border-zinc-800 bg-[#10121A]/80 p-8 text-center">
               <p className="text-zinc-500 mb-4">No AWS account is connected.</p>
-              <Link
-                href="/connect-aws"
-                className="inline-flex items-center justify-center whitespace-nowrap rounded-full bg-gradient-to-r from-violet-600 to-violet-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:from-violet-500 hover:to-violet-400"
-              >
-                Connect AWS Account
-              </Link>
+               <Link
+                 href="/connect-aws"
+                 prefetch={false}
+                 className="inline-flex items-center justify-center whitespace-nowrap rounded-full bg-gradient-to-r from-violet-600 to-violet-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:from-violet-500 hover:to-violet-400"
+               >
+                 Connect AWS Account
+               </Link>
             </div>
           ) : (
             <div className="flex flex-wrap gap-4 items-end">
@@ -280,6 +282,7 @@ export default function RecommendationsPage() {
         <div className="flex flex-wrap gap-3">
           <Link
             href="/costs"
+            prefetch={false}
             className="inline-flex items-center justify-center whitespace-nowrap rounded-full border border-violet-500/20 bg-white/5 px-5 py-3 text-sm font-semibold text-violet-200 transition hover:bg-white/10"
           >
             <TrendingUp className="w-4 h-4 mr-2" />

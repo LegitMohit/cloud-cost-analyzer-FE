@@ -146,6 +146,7 @@ export default function Home() {
             <Link
               key={feature.title}
               href={feature.href}
+              prefetch={false}
               className="group p-6 rounded-xl bg-[#111118] border border-[#1E1E2E] hover:border-violet-500/50 hover:bg-white/5 transition-all duration-200"
             >
               <feature.icon className="h-10 w-10 text-violet-400 mb-4" />
@@ -160,6 +161,7 @@ export default function Home() {
         <div className="text-center flex flex-col items-center gap-4">
           <Link
             href={{ pathname: "/aws" }}
+            prefetch={false}
             className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-violet-600 to-violet-500 px-8 py-3 text-sm font-semibold text-white hover:from-violet-500 hover:to-violet-400 transition-all active:scale-95"
           >
             Get Started

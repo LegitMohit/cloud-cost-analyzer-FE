@@ -213,6 +213,7 @@ export default function Home() {
           </div>
           <Link
             href={{ pathname: "/connect-aws" }}
+            prefetch={false}
             className="inline-flex items-center justify-center whitespace-nowrap rounded-full bg-gradient-to-r from-violet-600 to-violet-500 px-6 py-3 text-sm font-semibold text-center text-white shadow-lg shadow-violet-500/20 transition hover:from-violet-500 hover:to-violet-400"
           >
             + Connect AWS
@@ -229,6 +230,7 @@ export default function Home() {
             </div>
             <Link
               href={{ pathname: "/connect-aws" }}
+              prefetch={false}
               className="inline-flex items-center justify-center whitespace-nowrap rounded-full border border-violet-500/20 bg-violet-500/10 px-4 py-2 text-sm font-semibold text-center text-violet-200 transition hover:bg-violet-500/15"
             >
               + Connect AWS
@@ -334,12 +336,14 @@ export default function Home() {
           <div className="flex flex-wrap gap-3">
             <Link
               href={{ pathname: "/costs" }}
+              prefetch={false}
               className="rounded-full bg-gradient-to-r from-violet-600 to-violet-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:from-violet-500 hover:to-violet-400"
             >
               View Cost Analysis
             </Link>
             <Link
               href={{ pathname: "/recommendations" }}
+              prefetch={false}
               className="rounded-full border border-violet-500/20 bg-white/5 px-5 py-3 text-sm font-semibold text-violet-200 transition hover:bg-white/10"
             >
               View Recommendations
