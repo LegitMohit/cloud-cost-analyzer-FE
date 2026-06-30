@@ -2,10 +2,12 @@
 
 import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 function SignupForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
+    const pathname = usePathname();
     const redirectTo = searchParams.get("redirect") || "/";
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");

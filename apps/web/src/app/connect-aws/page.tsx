@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { awsApi } from "@/lib/api";
 import { Loader2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -22,6 +23,7 @@ const AWS_REGIONS = [
 ];
 
 export default function ConnectAWSPage() {
+  const pathname = usePathname();
   const router = useRouter();
   const [accessKey, setAccessKey] = useState("");
   const [secretKey, setSecretKey] = useState("");

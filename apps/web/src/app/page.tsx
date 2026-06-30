@@ -3,6 +3,7 @@
 import { Cloud, BarChart3, Lightbulb, Settings, Zap, ArrowDown, Copy, Check } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface JsonCopyBlockProps {
   json: string;
@@ -50,6 +51,7 @@ const JsonCopyBlock = ({ json, copied, onCopy }: JsonCopyBlockProps) => (
 );
 
 export default function Home() {
+  const pathname = usePathname();
   const [policyType, setPolicyType] = useState<"recommended" | "fullaccess">("recommended");
   const [copied, setCopied] = useState(false);
 
