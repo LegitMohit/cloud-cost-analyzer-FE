@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef, type SVGProps } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Loader2, X, Server, Database, HardDrive } from "lucide-react";
 import { KebabMenu } from "@/components/kebab-menu";
 import { awsApi } from "@/lib/api";
@@ -41,6 +42,7 @@ function BucketIcon(props: SVGProps<SVGSVGElement>) {
 }
 
 export default function Home() {
+  const pathname = usePathname();
   const [resources, setResources] = useState<AWSResource[]>([]);
   const [accounts, setAccounts] = useState<AWSAccount[]>([]);
   const [loading, setLoading] = useState(true);
@@ -98,6 +100,7 @@ export default function Home() {
   }, [selectedType]);
 
   useEffect(() => {
+    if (!pathname.startsWith("/aws")) return;
     async function fetchData() {
       try {
         const [resourcesRes, accountsRes] = await Promise.all([
@@ -118,7 +121,7 @@ export default function Home() {
       }
     }
     fetchData();
-  }, []);
+  }, [pathname]);
 
   const handleReconnect = (account: AWSAccount) => {
     setReconnectModal({ open: true, account });

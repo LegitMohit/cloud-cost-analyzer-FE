@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import { awsApi, type CostData } from "@/lib/api";
 import {
   Loader2,
@@ -32,6 +33,7 @@ function formatToTwoDecimals(num: number) {
 }
 
 export default function CostsPage() {
+  const pathname = usePathname();
   const [accounts, setAccounts] = useState<ConnectedAccount[]>([]);
   const [selectedAccountId, setSelectedAccountId] = useState<string>("");
   const [loading, setLoading] = useState(true);
@@ -60,6 +62,7 @@ export default function CostsPage() {
   }, [granularity, endDate]);
 
   useEffect(() => {
+    if (!pathname.startsWith("/costs")) return;
     async function fetchAccounts() {
       try {
         const response = await awsApi.getConnectedAccounts();
@@ -77,7 +80,7 @@ export default function CostsPage() {
       }
     }
     fetchAccounts();
-  }, []);
+  }, [pathname]);
 
   const fetchCosts = async () => {
     if (!selectedAccountId) {

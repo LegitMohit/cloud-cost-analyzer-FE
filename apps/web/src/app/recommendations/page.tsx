@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import {
   awsApi,
   type Recommendation,
@@ -37,6 +38,7 @@ function formatToTwoDecimals(num: number) {
 }
 
 export default function RecommendationsPage() {
+  const pathname = usePathname();
   const [accounts, setAccounts] = useState<ConnectedAccount[]>([]);
   const [selectedAccountId, setSelectedAccountId] = useState<string>("");
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
@@ -46,8 +48,9 @@ export default function RecommendationsPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    if (!pathname.startsWith("/recommendations")) return;
     fetchAccounts();
-  }, []);
+  }, [pathname]);
 
   useEffect(() => {
     if (selectedAccountId) {
