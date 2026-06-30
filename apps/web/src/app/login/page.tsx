@@ -2,10 +2,12 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 function LoginForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
+    const pathname = usePathname();
     const registered = searchParams.get("registered");
     const redirectTo = searchParams.get("redirect") || "/aws";
 
@@ -16,10 +18,11 @@ function LoginForm() {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+        if (!pathname.startsWith("/login")) return;
         if (registered) {
             setMessage("Registration successful! You can now log in.");
         }
-    }, [registered]);
+    }, [registered, pathname]);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
