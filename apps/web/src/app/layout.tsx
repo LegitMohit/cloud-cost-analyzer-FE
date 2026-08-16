@@ -23,6 +23,9 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.png",
   },
+  verification: {
+    google: "yzcLjbA4j20Ui8iMP82TY2pwoND0npG9LAK5DAKnoZA",
+  },
   openGraph: {
     title: "Cloud Vento | AI-Powered AWS Cost Optimization & Monitoring",
     description: "Monitor and optimize your AWS infrastructure costs with AI-powered insights, cost breakdowns, and smart recommendations for cloud savings.",
