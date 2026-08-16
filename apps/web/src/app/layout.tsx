@@ -18,10 +18,38 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Cloud Vento",
-  description: "Cloud Vento - AI-Powered Cloud Cost Optimization",
+  title: "Cloud Vento | AI-Powered AWS Cost Optimization & Monitoring",
+  description: "Monitor and optimize your AWS infrastructure costs with AI-powered insights, cost breakdowns, and smart recommendations for cloud savings.",
   icons: {
     icon: "/favicon.png",
+  },
+  openGraph: {
+    title: "Cloud Vento | AI-Powered AWS Cost Optimization & Monitoring",
+    description: "Monitor and optimize your AWS infrastructure costs with AI-powered insights, cost breakdowns, and smart recommendations for cloud savings.",
+    url: "https://cloudvento.vercel.app",
+    siteName: "Cloud Vento",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Cloud Vento | AI-Powered AWS Cost Optimization & Monitoring",
+    description: "Monitor and optimize your AWS infrastructure costs with AI-powered insights, cost breakdowns, and smart recommendations.",
+  },
+  other: {
+    "script:ld+json": JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      name: "Cloud Vento",
+      applicationCategory: "BusinessApplication",
+      operatingSystem: "Web",
+      description: "AI-powered AWS infrastructure cost monitoring and optimization platform with intelligent insights and recommendations.",
+      url: "https://cloudvento.vercel.app",
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "USD",
+      },
+    }),
   },
 };
 
