@@ -26,6 +26,9 @@ export const metadata: Metadata = {
   verification: {
     google: "yzcLjbA4j20Ui8iMP82TY2pwoND0npG9LAK5DAKnoZA",
   },
+  alternates: {
+    canonical: "https://cloudvento.vercel.app",
+  },
   openGraph: {
     title: "Cloud Vento | AI-Powered AWS Cost Optimization & Monitoring",
     description: "Monitor and optimize your AWS infrastructure costs with AI-powered insights, cost breakdowns, and smart recommendations for cloud savings.",
@@ -39,20 +42,36 @@ export const metadata: Metadata = {
     description: "Monitor and optimize your AWS infrastructure costs with AI-powered insights, cost breakdowns, and smart recommendations.",
   },
   other: {
-    "script:ld+json": JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      name: "Cloud Vento",
-      applicationCategory: "BusinessApplication",
-      operatingSystem: "Web",
-      description: "AI-powered AWS infrastructure cost monitoring and optimization platform with intelligent insights and recommendations.",
-      url: "https://cloudvento.vercel.app",
-      offers: {
-        "@type": "Offer",
-        price: "0",
-        priceCurrency: "USD",
+    "script:ld+json": JSON.stringify([
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: "Cloud Vento",
+        alternateName: ["CloudVento", "Cloud Vento AWS Cost Optimization"],
+        url: "https://cloudvento.vercel.app",
       },
-    }),
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        name: "Cloud Vento",
+        url: "https://cloudvento.vercel.app",
+        logo: "https://cloudvento.vercel.app/favicon.png",
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        name: "Cloud Vento",
+        applicationCategory: "BusinessApplication",
+        operatingSystem: "Web",
+        description: "AI-powered AWS infrastructure cost monitoring and optimization platform with intelligent insights and recommendations.",
+        url: "https://cloudvento.vercel.app",
+        offers: {
+          "@type": "Offer",
+          price: "0",
+          priceCurrency: "USD",
+        },
+      },
+    ]),
   },
 };
 
